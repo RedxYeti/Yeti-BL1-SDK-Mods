@@ -1,0 +1,5 @@
+Tracks your console command history between game loads.
+
+supports read only
+
+Theres a option in hooks called "ForceReadOnly". set to True to force the history to only be whats in your json file.
