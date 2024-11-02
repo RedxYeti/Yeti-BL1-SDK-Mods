@@ -1,9 +1,9 @@
 {
-    "Top": 1,
+    "Top": 0,
     "Bottom": 0,
-    "Current": 1,
+    "Current": 0,
     "Commands": [
-        "pyexec test.py",
+        "",
         "",
         "",
         "",

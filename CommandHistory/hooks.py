@@ -16,6 +16,20 @@ def LoadJson(obj):
     if os.path.exists(file_path):
         with open(file_path, 'r') as file:
             consoleData: dict = json.load(file)
+            
+            #this sorts the commands into populated and unpopulated so the history top and bottom are configured correctly
+            Commands = consoleData["Commands"]
+            PopulatedCommands = [cmd for cmd in Commands if cmd]
+            EmptyCommands = [""] * (len(Commands) - len(PopulatedCommands))
+            SortedCommands = PopulatedCommands + EmptyCommands
+            
+            consoleData["Commands"] = SortedCommands
+            
+            TotalPopulated = len(PopulatedCommands)
+            consoleData["Top"] = TotalPopulated
+            consoleData["Bottom"] = 0
+            consoleData["Current"] = TotalPopulated
+            
             obj.HistoryTop = consoleData["Top"]
             obj.HistoryBot = consoleData["Bottom"]
             obj.HistoryCur = consoleData["Current"]
