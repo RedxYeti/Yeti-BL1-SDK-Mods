@@ -26,13 +26,10 @@ def LoadJson(obj):
             consoleData["Commands"] = SortedCommands
             
             TotalPopulated = len(PopulatedCommands)
-            consoleData["Top"] = TotalPopulated
-            consoleData["Bottom"] = 0
-            consoleData["Current"] = TotalPopulated
             
-            obj.HistoryTop = consoleData["Top"]
-            obj.HistoryBot = consoleData["Bottom"]
-            obj.HistoryCur = consoleData["Current"]
+            obj.HistoryTop = TotalPopulated
+            obj.HistoryBot = 0
+            obj.HistoryCur = TotalPopulated
             obj.History = consoleData["Commands"]
     return
 
@@ -50,9 +47,6 @@ def ConsoleCommandHistory(obj: UObject, args: WrappedStruct, ret: any, func: Bou
         return
 
     commandDict = {}
-    commandDict["Top"] = obj.HistoryTop
-    commandDict["Bottom"] = obj.HistoryBot
-    commandDict["Current"] = obj.HistoryCur
     commandDict["Commands"] = obj.History
 
     with open(file_path, 'w') as file:
@@ -63,7 +57,7 @@ def ConsoleCommandHistory(obj: UObject, args: WrappedStruct, ret: any, func: Bou
 
 @hook(hook_func="Engine.Console:PostRender_Console",hook_type=Type.POST,)
 def FillHistory(obj: UObject, args: WrappedStruct, ret: any, func: BoundFunction):
-    global Initialized, file_path
+    global Initialized
     if Initialized:
         return
     
