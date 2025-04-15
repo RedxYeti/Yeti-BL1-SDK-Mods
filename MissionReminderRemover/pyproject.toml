@@ -1,0 +1,13 @@
+[project]
+name = "MissionReminderRemover"
+version = "1.0.0"
+authors = [{ name = "yeti" }]
+description = "Removes all mission reminders from the game."
+
+[tool.sdkmod]
+name = "Mission Reminder Remover"
+mod_type = "Standard" # or "Library"
+supported_games = "BL1"
+coop_support = "Unknown"
+auto_enable = "False"
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
