@@ -1,0 +1,13 @@
+[project]
+name = "NoBerserkScreenShake"
+version = "1.0.0"
+authors = [{ name = "yeti" }]
+description = "Removes the screen shake from from Brick's Berserk."
+
+[tool.sdkmod]
+name = "No Berserk Screen Shake"
+mod_type = "Standard" # or "Library"
+supported_games = "BL1"
+coop_support = "Unknown"
+auto_enable = "False"
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
