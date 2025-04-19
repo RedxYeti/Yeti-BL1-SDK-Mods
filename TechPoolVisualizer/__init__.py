@@ -17,7 +17,7 @@ oidSize = SliderOption(
     5,
     0.1,
     display_name="Visualizer Size",
-    description="The size of the font of the visualizer.",
+    description="The size of the font of the visualizer, not very flexible seems to round off.",
     on_change=ResetVis
 )
 
