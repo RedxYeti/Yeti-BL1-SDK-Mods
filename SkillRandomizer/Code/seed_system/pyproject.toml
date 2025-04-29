@@ -1,0 +1,18 @@
+[project]
+name = "seed_system"
+version = "1.0"
+authors = [{ name = "mopioid" }]
+description = "A modding library for implementing seeds in randomizer mods for Borderlands series games."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://github.com/mopioid/Borderlands-Seed-System"
+Repository = "https://github.com/mopioid/Borderlands-Seed-System.git"
+"Bug Tracker" = "https://github.com/mopioid/Borderlands-Seed-System/issues"
+
+[tool.sdkmod]
+name = "Seed System"
+license = { name = "MIT", url = "https://choosealicense.com/licenses/mit/" }
+download = "https://github.com/mopioid/Borderlands-Seed-System"
