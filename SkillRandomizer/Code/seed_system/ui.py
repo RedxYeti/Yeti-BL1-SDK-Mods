@@ -25,13 +25,10 @@ type ApplySeedCallback = Callable[[str], None]
 
 def show_message(title: str, message: str) -> None:
     if console_screens:
-        #print(f"\n[ {title} ]\n{message}\n")
-        from ui_utils.training_box import TrainingBox  # type: ignore
-
-        TrainingBox(title=title, message=message).show()
+        print(f"\n[ {title} ]\n{message}\n")
 
     elif mods_base.Game.get_tree() == mods_base.Game.Willow2:
-        from ui_utils.training_box import TrainingBox  # type: ignore
+        from ui_utils.training_box import TrainingBox
 
         TrainingBox(title=title, message=message).show()
 
@@ -89,7 +86,7 @@ class NewSeedNested(mods_base.NestedOption):
 
         self._seedsystem_generate_button = mods_base.ButtonOption(
             identifier="GENERATE SEED",
-            description="Enter 1 to finish creating your seed.",
+            description="Confirm selections and generate the new seed.",
             on_press=on_press,
         )
 
@@ -227,9 +224,9 @@ class SelectSeedNested(mods_base.NestedOption):
         return self._seedsystem_children
 
     @children.setter
-    def children(
+    def children(  # pyright: ignore[reportIncompatibleVariableOverride]
         self, children: list[mods_base.BaseOption]
-    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
+    ) -> None:
         self._seedsystem_children = children
 
     def apply_pressed(self) -> None:
@@ -264,9 +261,9 @@ class SeedDropdown(mods_base.DropdownOption):
         return self.choices[0]
 
     @value.setter
-    def value(
+    def value(  # pyright: ignore[reportIncompatibleVariableOverride]
         self, value: str
-    ) -> None:  # pyright: ignore[reportIncompatibleVariableOverride]
+    ) -> None:
         self._seedsystem_staged = value
 
         if console_screens:
@@ -285,3 +282,5 @@ class SeedDropdown(mods_base.DropdownOption):
         else:
             self._seedsystem_value = value
             self._seedsystem_staged = value
+        if self.mod:
+            self.mod.save_settings()

@@ -86,7 +86,7 @@ version1 = SeedFormat(
 Your subclass of `Seed` defines the properties of your seed system, as well as how instances of seeds should behave, such as when enabled or disabled:
 ```python
 class LootSeed(Seed):
-    seeds_path = mods_base.SETTINGS_DIR / "Loot Randomizer" / "Seeds.txt"
+    seeds_file = mods_base.SETTINGS_DIR / "Loot Randomizer" / "Seeds.txt"
     seed_formats = version0, version1
     default_version = version1
 
@@ -118,7 +118,7 @@ select_seed_menu = LootSeed.select_seed_menu()
 mod = mods_base.build_mod(
     options=[new_seed_menu, edit_seeds_button, select_seed_menu],
     settings_file=mods_base.SETTINGS_DIR / "Loot Randomizer" / "settings.json",
-    on_enable=LootSeed.enable_seed
+    on_enable=LootSeed.enable_seed,
     on_disable=LootSeed.disable_seed
 )
 ```

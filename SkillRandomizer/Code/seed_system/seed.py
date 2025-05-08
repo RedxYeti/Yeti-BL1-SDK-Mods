@@ -27,7 +27,7 @@ class seed_type(type):
         name: str,
         bases: tuple[type],
         namespace: dict[str, Any],
-        **kwds: Any
+        **kwds: Any,
     ):
         if not bases:
             return super().__new__(cls, name, bases, namespace, **kwds)
@@ -38,8 +38,8 @@ class seed_type(type):
                 " the seeds directory"
             )
 
-        seed_formats: Sequence[SeedFormat] | None = (
-            namespace.get("seed_formats")
+        seed_formats: Sequence[SeedFormat] | None = namespace.get(
+            "seed_formats"
         )
         if not seed_formats:
             raise NotImplementedError(
@@ -108,9 +108,7 @@ class Seed(metaclass=seed_type):
 
     @classmethod
     def open_seeds_file(
-        cls,
-        mode: str = 'r',
-        show_error: bool = True
+        cls, mode: str = "r", show_error: bool = True
     ) -> IO[str]:
         """
         Attempt to open the file located at `seeds_file`, creating its parent
@@ -128,23 +126,21 @@ class Seed(metaclass=seed_type):
         try:
             os.makedirs(cls.seeds_file.parent, exist_ok=True)
             if not os.path.exists(cls.seeds_file):
-                with open(cls.seeds_file, 'w'):
+                with open(cls.seeds_file, "w"):
                     pass
-            return open(cls.seeds_file, mode, encoding='utf-8')
+            return open(cls.seeds_file, mode, encoding="utf-8")
         except OSError as error:
             if show_error:
                 ui.show_message(
                     f"Failed to Open Seeds File",
                     f"Could not open the seeds file at {cls.seeds_file}:\n\n"
-                    f"{error}"
+                    f"{error}",
                 )
             raise error
 
-
     @classmethod
     def seed_format_for_version(
-        cls,
-        version: int | SeedFormat | None = None
+        cls, version: int | SeedFormat | None = None
     ) -> SeedFormat:
         """
         Obtain the seed format object for the given version. Raises
@@ -159,7 +155,7 @@ class Seed(metaclass=seed_type):
 
                 If a SeedFormat object, the same SeedFormat is returned after
                 asserting that it does exist in `seed_formats`.
-            
+
         Returns:
             The `SeedFormat` instance representing the seed format for the
             given version.
@@ -177,17 +173,14 @@ class Seed(metaclass=seed_type):
                 version = version.version
 
         raise SeedVersionError(
-            version,
-            f"{cls.__name__} does not define seed version {version}"
+            version, f"{cls.__name__} does not define seed version {version}"
         )
-    
 
     _new_seed_menus: ClassVar[WeakValueDictionary[int, ui.NewSeedNested]]
 
     @classmethod
     def new_seed_menu(
-        cls,
-        version: SeedFormat | int | None = None
+        cls, version: SeedFormat | int | None = None
     ) -> ui.NewSeedNested:
         """
         Obtain a Mod Menu NestedOption representing a "New Seed" menu for the
@@ -209,7 +202,6 @@ class Seed(metaclass=seed_type):
             cls._new_seed_menus[seed_format.version] = menu
         return menu
 
-
     _edit_seed_button: ClassVar[ReferenceType[ui.EditSeedsButton]]
 
     @classmethod
@@ -223,7 +215,6 @@ class Seed(metaclass=seed_type):
             button = ui.EditSeedsButton(cls.edit_seeds)
             cls._edit_seed_button = ReferenceType(button)
         return button
-
 
     _select_seed_menu: ClassVar[ReferenceType[ui.SelectSeedNested]]
 
@@ -239,16 +230,13 @@ class Seed(metaclass=seed_type):
             cls._select_seed_menu = ReferenceType(menu)
         return menu
 
-
     @classmethod
     def _new_seed_generated(
-        cls,
-        seed_format: SeedFormat,
-        options: dict[ValueSeedOption[Any], Any]
+        cls, seed_format: SeedFormat, options: dict[ValueSeedOption[Any], Any]
     ) -> None:
         seed = cls.new_seed_generated(seed_format, options)
 
-        with cls.open_seeds_file('a+') as file:
+        with cls.open_seeds_file("a+") as file:
             file.seek(0, 0)
             seeds = file.read()
 
@@ -258,22 +246,19 @@ class Seed(metaclass=seed_type):
             if seed.string not in seeds:
                 file.write(seed.string + "\n")
 
-        if (menu := cls._select_seed_menu()):
-            menu._seedsystem_dropdown.seedsystem_commit_staged(seed.string)  # pyright: ignore[reportPrivateUsage]
+        if menu := cls._select_seed_menu():
+            menu._seedsystem_dropdown.seedsystem_commit_staged(seed.string)
 
         cls.enable_seed(seed)
 
         ui.show_message(
-            "Seed Generated",
-            "You will now see the seed's randomization in your game."
+            "Seed Generated and Applied",
+            "You will now see the seed's randomization in your game.",
         )
-
 
     @classmethod
     def new_seed_generated(
-        cls,
-        seed_format: SeedFormat,
-        options: dict[ValueSeedOption[Any], Any]
+        cls, seed_format: SeedFormat, options: dict[ValueSeedOption[Any], Any]
     ) -> Self:
         """
         Called when the user confirms generation of a new seed in the seed
@@ -291,17 +276,15 @@ class Seed(metaclass=seed_type):
         """
         return cls(version=seed_format, options=options)
 
-
     @classmethod
     def edit_seeds(cls) -> None:
         """
         Called when the user clicks the edit seeds button. Override to provide
         custom behavior at such a time.
         """
-        with cls.open_seeds_file('a+'):
+        with cls.open_seeds_file("a+"):
             pass
         os.startfile(cls.seeds_file)
-
 
     @classmethod
     def load_seeds(cls) -> list[str]:
@@ -321,7 +304,6 @@ class Seed(metaclass=seed_type):
         with cls.open_seeds_file() as file:
             return [line.strip() for line in file]
 
-
     @classmethod
     def _seed_selected(cls, string: str) -> None:
         try:
@@ -331,14 +313,11 @@ class Seed(metaclass=seed_type):
                 "Incorrect Version",
                 f"Seed {string} is incompatible with this version. To use it,"
                 " install a version of that supports seeds of version"
-                f" {error.version}"
+                f" {error.version}",
             )
             raise error
         except Exception as error:
-            ui.show_message(
-                "Invalid Seed",
-                f"Seed '{string}' is not valid."
-            )
+            ui.show_message("Invalid Seed", f"Seed '{string}' is not valid.")
             raise error
 
         cls.enable_seed(seed)
@@ -346,9 +325,8 @@ class Seed(metaclass=seed_type):
         ui.show_message(
             "Seed Applied",
             f"Seed {string} has been applied. You will now see the changes in"
-            " your game."
+            " your game.",
         )
-
 
     @classmethod
     def seed_selected(cls, string: str) -> Self:
@@ -365,12 +343,10 @@ class Seed(metaclass=seed_type):
         """
         return cls(string)
 
-
     current_seed: ClassVar[Self | None] = None
     """
     The seed currently enabled via `enable_seed()`, if any.
     """
-
 
     @classmethod
     def enable_seed(cls, seed: Self | None = None) -> None:
@@ -390,7 +366,7 @@ class Seed(metaclass=seed_type):
         Args:
             seed:
                 If provided, the specified seed will be enabled.
-                
+
                 Alternatively, invoking this method with no arguments can be
                 used to load the last enabled seed, as saved to your mod's
                 settings via `select_seed_menu()`.
@@ -404,7 +380,7 @@ class Seed(metaclass=seed_type):
                     " mod has been enabled."
                 )
 
-            seed_string = menu._seedsystem_dropdown.value  # pyright: ignore[reportPrivateUsage]
+            seed_string = menu._seedsystem_dropdown.value
             if not seed_string:
                 return
 
@@ -427,7 +403,6 @@ class Seed(metaclass=seed_type):
         seed.enable()
         cls.current_seed = seed
 
-
     @classmethod
     def disable_seed(cls) -> None:
         """
@@ -436,7 +411,6 @@ class Seed(metaclass=seed_type):
         if cls.current_seed:
             cls.current_seed.disable()
             cls.current_seed = None
-
 
     string: str
     """
@@ -469,9 +443,9 @@ class Seed(metaclass=seed_type):
         """
         pass
 
-
     @overload
     def __init__(self, string: str) -> None: ...
+
     """
     Attempt to decode a seed's string representation into a seed instance,
     complete with its seed format, encoded options, and data encompassing its
@@ -492,8 +466,9 @@ class Seed(metaclass=seed_type):
         *,
         version: SeedFormat | int | None = None,
         random: int | None = None,
-        options: dict[ValueSeedOption[Any], Any] = dict()
+        options: dict[ValueSeedOption[Any], Any] = dict(),
     ) -> None: ...
+
     """
     Generate a seed of the given format, option values, and optionally a
     predetermined 'random' value.
@@ -534,10 +509,10 @@ class Seed(metaclass=seed_type):
         Seeds should generally not need to be instantiated manually, as the
         seed system handles seed generation and importing, however this method
         is available if you would like to provide custom behavior.
-        
+
         Args:
             string:
-                A string representation of a seed that the instance should 
+                A string representation of a seed that the instance should
                 attempt to be decoded from. If this is specified, the remaining
                 arguments are ignored. If not specified, a new seed will be
                 generated based on the remaining arguments.
@@ -565,7 +540,7 @@ class Seed(metaclass=seed_type):
                 b32 += "=" * (8 - len(b32) % 8)
 
             self.data = b32decode(b32)
-            bits = int.from_bytes(self.data, 'big')
+            bits = int.from_bytes(self.data, "big")
 
             version = bits & (2**VERSION_WIDTH - 1)
             bits >>= VERSION_WIDTH
@@ -597,9 +572,9 @@ class Seed(metaclass=seed_type):
 
             bits = (bits << VERSION_WIDTH) | self.seed_format.version
 
-            self.data = bits.to_bytes(self.seed_format.byte_count, 'big')
+            self.data = bits.to_bytes(self.seed_format.byte_count, "big")
 
-        b32 = b32encode(self.data).decode('ascii').strip('=')
+        b32 = b32encode(self.data).decode("ascii").strip("=")
         b32_index = 0
 
         self.string = ""
@@ -610,18 +585,13 @@ class Seed(metaclass=seed_type):
             else:
                 self.string += char
 
-
     def __hash__(self) -> int:
         return hash(self.data)
 
     def __eq__(self, value: object) -> bool:
         return type(value) == type(self) and self.data == value.data
 
-
-    def __getitem__[T: mods_base.JSON](
-        self,
-        option: ValueSeedOption[T]
-    ) -> T:
+    def __getitem__[T: mods_base.JSON](self, option: ValueSeedOption[T]) -> T:
         try:
             return self.options[option]
         except KeyError:
@@ -632,15 +602,12 @@ class Seed(metaclass=seed_type):
 
     @overload
     def get[T: mods_base.JSON](
-        self,
-        option: ValueSeedOption[T]
+        self, option: ValueSeedOption[T]
     ) -> T | None: ...
 
     @overload
     def get[T: mods_base.JSON, D](
-        self,
-        option: ValueSeedOption[T],
-        default: D
+        self, option: ValueSeedOption[T], default: D
     ) -> T | D: ...
 
     def get(self, option: ValueSeedOption[Any], default: Any = None) -> Any:
