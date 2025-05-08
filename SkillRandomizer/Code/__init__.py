@@ -1,4 +1,4 @@
-from unrealsdk import find_object
+from unrealsdk import find_object, load_package
 from unrealsdk.hooks import Type
 from unrealsdk.unreal import UObject, WrappedStruct, BoundFunction
 from mods_base import hook, build_mod, SETTINGS_DIR
@@ -39,6 +39,14 @@ from .SkillDefinitions import (
     GeneralSkills,
 )
 
+from .ClassMods import (
+    BrickComs,
+    LilithComs,
+    MordecaiComs,
+    RolandComs,
+    AllBuffedSkills,
+)
+
 BrickSkillsSet = find_object(
     "PlayerSkillSetDefinition",
     "gd_Skills2_Brick.SkillSet.PlayerSkillSet_Brick",
@@ -75,12 +83,50 @@ CharacterSpecificSkills = [
     MordecaiSkills,
     RolandSkills,
 ]
+AllComs = [
+    BrickComs,
+    LilithComs,
+    MordecaiComs,
+    RolandComs,
+]
 
 NewSkills = []
 NewCombatSkills = []
 NewKillSkills = []
+SkillsForComs = []
+AttributesForComs = []
 
 RandomizedSkills = False
+
+def SetUpComs(CharacterIndex:int) -> None:
+    if len(SkillsForComs) < 1:
+        return
+
+    load_package("gd_CommandDecks")
+    load_package("dlc3_gd_CommandDecks")
+    for Com in AllComs[CharacterIndex]:
+        Com = find_object('ItemPartDefinition', Com)
+        Com.ObjectFlags |= 0x4000
+        AddedSkills = []
+        
+        for SlotEffect in Com.AttributeSlotEffects:
+            if SlotEffect.SlotName in ["Aug1", "Aug2", "Aug3"]:
+                for key, value in AllBuffedSkills.items():
+                    if SlotEffect.AttributeToModify == find_object('AttributeDefinition', value):
+                        if key not in SkillsForComs:
+                            RandomAttribute = find_object('AttributeDefinition', SkillSeed.current_seed.random.choice(AttributesForComs))
+                            while RandomAttribute in AddedSkills:
+                                RandomAttribute = find_object('AttributeDefinition', SkillSeed.current_seed.random.choice(AttributesForComs))
+
+                            if len(SkillsForComs) >= 3:
+                                AddedSkills.append(RandomAttribute)
+                            
+                            SlotEffect.AttributeToModify = RandomAttribute
+                        break
+                        
+    AddedSkills = []  
+    return
+
 
 def GetNewSkill() -> UObject:
     if not SkillSeed.current_seed:
@@ -89,6 +135,11 @@ def GetNewSkill() -> UObject:
     NewSkill = NewSkills.pop(
         NewSkills.index(SkillSeed.current_seed.random.choice(NewSkills))
     )
+
+    if NewSkill in AllBuffedSkills.keys():
+        SkillsForComs.append(NewSkill)
+        AttributesForComs.append(AllBuffedSkills[NewSkill])
+
     NewSkillObject = find_object("SkillDefinition", NewSkill)
     if NewSkill in CombatSkills:
         NewCombatSkills.append(NewSkillObject)
@@ -101,7 +152,7 @@ def GetNewSkill() -> UObject:
 def LaunchedGame(
     obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction
 ):
-    global RandomizedSkills, NewCombatSkills, NewKillSkills, NewSkills
+    global RandomizedSkills, NewCombatSkills, NewKillSkills, NewSkills, SkillsForComs, AttributesForComs
 
     if not SkillSeed.current_seed:
         return
@@ -110,6 +161,8 @@ def LaunchedGame(
         for CharacterSet in AllSkillSets:
             NewCombatSkills = []
             NewKillSkills = []
+            SkillsForComs = []
+            AttributesForComs = []
 
             NewSkills = (
                 CharacterSpecificSkills[AllSkillSets.index(CharacterSet)]
@@ -136,6 +189,8 @@ def LaunchedGame(
 
             CharacterSet.CombatSkills = NewCombatSkills
             CharacterSet.InstinctSkillAugmentations = NewKillSkills
+
+            SetUpComs(AllSkillSets.index(CharacterSet))
 
         RandomizedSkills = True
 
