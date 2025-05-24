@@ -2,12 +2,36 @@
 name = "EnemyRandomizer"
 version = "1.0.0"
 authors = [{ name = "yeti" }]
-description = "Randomizes Enemies"
+description = """
+This mod randomizes enemies across the game using the sdk. 
+
+By default, small enemies will get randomized to small enemies, badasses to badasses and bosses to bosses, with a 1% for normal enemies  to randomize to a boss.
+
+This mod is will not work with any Editable Basemaps mods.
+
+
+Options:
+Wandering Bosses: A percent chance of how often normal enemies are randomized to a boss. Starts at 1%. 0% to turn it off.
+
+
+Static Bosses: Vanilla boss locations will be randomized to the same boss every time per save. Off by default, but I prefer it on.
+
+
+Enemy Allegiance: With this on all the enemies join together to fight you. With this off they'll respect their vanilla allegiances.
+On by default.
+
+
+Strictness: Controls how strict the randomization is.
+
+Strict means normal enemies replace normal enemies, and badasses replace badasses. (recommended)
+Chaos Light means normal and badasses are mixed, bosses still only spawn bosses.
+Full Chaos means normal, badasses and bosses have no restrictions.
+"""
 
 [tool.sdkmod]
 name = "Enemy Randomizer"
 mod_type = "Standard" # or "Library"
 supported_games = ["BL1"]
-coop_support = "Unknown"
+coop_support = "Incompatible"
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/EnemyRandomizer/EnemyRandomizer.zip"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
