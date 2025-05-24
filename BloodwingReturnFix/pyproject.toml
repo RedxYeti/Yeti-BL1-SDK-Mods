@@ -8,6 +8,6 @@ description = "Fixes bloodwing disappearing after a while."
 name = "Bloodwing Return Fix"
 mod_type = "Standard" # or "Library"
 supported_games = ["BL1"]
-coop_support = "RequiresAllPlayers"
+coop_support = "HostOnly"
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/BloodwingReturnFix/BloodwingReturnFix.zip"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
