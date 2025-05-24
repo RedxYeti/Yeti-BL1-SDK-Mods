@@ -9,5 +9,5 @@ name = "Quick Use Vendors"
 mod_type = "Standard" # or "Library"
 supported_games = "BL1"
 coop_support = "Unknown"
-auto_enable = "False"
+download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/QuickUseVendors/QuickUseVendors.zip"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
