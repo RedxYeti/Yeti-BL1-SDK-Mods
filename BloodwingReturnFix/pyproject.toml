@@ -1,57 +1,13 @@
-# NOTE THIS DOCUMENTATION IS TAKEN FROM: `../mods_base/mod_factory.py`
-#
-# The .toml file is loaded up by the mod_factory and information is taken from
-#  it. This allows you to separate configuration bloat and logic.
-#
-#    Fields are gathered in three ways, in order of priority:
-#    - Args directly to this function.
-#    - A `pyproject.toml` in the same dir as the calling module.
-#    - Variables in the calling module's scope. Note the ordering of these is not necessarily stable.
-#
-#    Arg             | `pyproject.toml`, in priority order  | Module Scope
-#    ----------------|--------------------------------------|--------------
-#    name            | tool.sdkmod.name, project.name       |
-#    author          | project.authors[n].name ^1           | __author__
-#    description     | project.description                  |
-#    version         | tool.sdkmod.version, project.version | __version__
-#                    | project.version                      | __version_info__
-#    mod_type        | tool.sdkmod.mod_type ^2              |
-#    supported_games | tool.sdkmod.supported_games ^3       |
-#    coop_support    | tool.sdkmod.coop_support ^4          |
-#    settings_file   |                                      | f"{__name__}.json" in the settings dir
-#    keybinds        |                                      | Keybind instances
-#    options         |                                      | OptionBase instances ^5
-#    hooks           |                                      | Hook instances
-#    commands        |                                      | AbstractCommand instances
-#    auto_enable     | tool.sdkmod.auto_enable              |
-#    on_enable       |                                      | on_enable
-#    on_disable      |                                      | on_disable
-#
-#    ^1: Multiple authors are joined into a single string using commas + spaces.
-#    ^2: A string of one of the ModType enum value's name. Case sensitive.
-#    ^3: A list of strings of Game enum values' names. Case sensitive.
-#    ^4: A string of one of the CoopSupport enum value's name. Case sensitive.
-#    ^5: GroupedOption and NestedOption instances are deliberately ignored, to avoid possible issues
-#        gathering their child options twice. They must be explicitly passed via the arg.
-#
-#    Missing fields are not passed on to the mod constructor - e.g. by never specifying supported
-#    games, they won't be passed on and it will use the default, all of them.
-
-# If you're using pycharm CTRL+SHIFT+F is a good way to find something.
-#  i.e., CTRL+SHIFT+F > CoopSupport > Shows you all possible values
-#
-
-
 [project]
 name = "BloodwingReturnFix"
 version = "1.0.0"
 authors = [{ name = "yeti" }]
-description = "no collision return"
+description = "Removes collision on bloodwings return, also detects if bloodwing has disappeared."
 
 [tool.sdkmod]
 name = "Bloodwing Return Fix"
 mod_type = "Standard" # or "Library"
 supported_games = "BL1"
 coop_support = "Unknown"
-auto_enable = "False"
+download = ""
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
