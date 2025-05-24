@@ -7,7 +7,7 @@ description = "Removes all mission reminders from the game."
 [tool.sdkmod]
 name = "Mission Reminder Remover"
 mod_type = "Standard" # or "Library"
-supported_games = "BL1"
+supported_games = ["BL1"]
 coop_support = "Unknown"
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/MissionReminderRemover/MissionReminderRemover.zip"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
