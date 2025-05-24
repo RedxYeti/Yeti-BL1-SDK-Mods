@@ -2,7 +2,7 @@
 name = "EnemyRandomizer"
 version = "1.0.0"
 authors = [{ name = "yeti" }]
-description = f"
+description = """
 This mod randomizes enemies across the game using the sdk. \n\n
 
 By default, small enemies will get randomized to small enemies, badasses to badasses and bosses to bosses, with a 1% for normal enemies  to randomize to a boss.
@@ -26,7 +26,7 @@ Strictness: Controls how strict the randomization is.
 Strict means normal enemies replace normal enemies, and badasses replace badasses. (recommended)
 Chaos Light means normal and badasses are mixed, bosses still only spawn bosses.
 Full Chaos means normal, badasses and bosses have no restrictions.
-"
+"""
 
 [tool.sdkmod]
 name = "Enemy Randomizer"
