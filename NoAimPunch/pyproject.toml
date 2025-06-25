@@ -1,0 +1,13 @@
+[project]
+name = "NoAimPunch"
+version = "1.0.0"
+authors = [{ name = "yeti" }]
+description = "Remove the screen shake when you take damage."
+
+[tool.sdkmod]
+name = "No Aim Punch"
+mod_type = "Standard" # or "Library"
+supported_games = "BL1"
+coop_support = "Client Side"
+auto_enable = "False"
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
