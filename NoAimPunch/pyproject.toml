@@ -8,7 +8,7 @@ description = "Removes the camera moving when you take damage. Optionally remove
 name = "No Aim Punch"
 mod_type = "Standard" # or "Library"
 supported_games = "BL1"
-coop_support = "Client Side"
+coop_support = "ClientSide"
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/NoAimPunch/NoAimPunch.sdkmod"
 auto_enable = "False"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
