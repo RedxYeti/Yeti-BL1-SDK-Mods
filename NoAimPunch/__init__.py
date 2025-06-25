@@ -20,7 +20,6 @@ def DamageShake(obj, args, ret, func):
         GlobalsDef = Globals.GetGlobalsDefinition()
 
     if not GlobalsDef:
-        print("yo")
         return Block
     
     BigDamageThreshold = GlobalsDef.BigDamageThreshold
