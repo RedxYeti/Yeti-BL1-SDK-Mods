@@ -2,7 +2,7 @@
 name = "NoAimPunch"
 version = "1.0.0"
 authors = [{ name = "yeti" }]
-description = "Remove the screen shake when you take damage."
+description = "Removes the camera moving when you take damage. Optionally removes the shake as well."
 
 [tool.sdkmod]
 name = "No Aim Punch"
