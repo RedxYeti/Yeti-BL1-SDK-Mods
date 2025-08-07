@@ -2,12 +2,13 @@
 name = "DedicatedDrops"
 version = "1.0.0"
 authors = [{ name = "RedxYeti" }]
-description = "Adds dedicated loot sources to enemies across the game."
+description = "Adds dedicated loot sources to enemies across the game. Coop supported!"
 
 [tool.sdkmod]
 name = "Dedicated Drops"
-mod_type = "Standard" # or "Library"
+mod_type = "Standard"
 supported_games = ["BL1"]
-coop_support = "Unknown"
+coop_support = "RequiresAllPlayers"
 auto_enable = "False"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+
