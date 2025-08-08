@@ -36,7 +36,7 @@ def remove_item(inv_manager:UObject,item_name:str) -> None:
 
 locational_drops = {
     'gd_VaultBoss_Main.population.Pawn_Balance_VaultBoss_Main': 
-     make_struct('Vector',X=-12839,Y=6023,Z=11095),
+    make_struct('Vector',X=-12839,Y=6023,Z=11095),
 
     'gd_Balance_Enemies_Creatures.Rakk.Pawn_Balance_Rakk_Mothrakk': 
     make_struct('Vector',X=-35821, Y=-19287, Z=234),
@@ -109,8 +109,9 @@ class BoneHead(Enemy):
     balance_state = 'gd_Balance_Enemies_Humans.Bandits.Named.Pawn_Balance_Bonehead'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, 'Bone Shredder')
-        self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_BoneShredder_Savior')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, 'Bone Shredder')
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_BoneShredder_Savior')
 
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_Savior')
@@ -170,8 +171,9 @@ class TaylorKobb(Enemy):
     balance_state = 'gd_Balance_Enemies_Humans.Bandits.Named.Pawn_Balance_Kobb_Taylor'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, 'The Roaster')
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Weapons_TaylorKobb')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, 'The Roaster')
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.Launchers.Pool_Rhino_TheRoaster')
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.Launchers.Pool_Rhino')
         return super().on_enemy_death()    
@@ -212,8 +214,9 @@ class BaronFlynt(Enemy):
     balance_state = 'gd_Balance_Enemies_Humans.Bandits.Named.Pawn_Balance_BaronFlynt'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, 'Boom Stick')
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Weapons_BaronFlynt')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, 'Boom Stick')
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.CShotgun.Pool_FriendlyFire_Boomstick')
         if roll_for_drop(MEDIUM):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.CShotgun.Pool_FriendlyFire')
         return super().on_enemy_death()
@@ -275,8 +278,9 @@ class Scar(Enemy):
     balance_state = 'gd_Balance_Enemies_Creatures.Skags.Pawn_Balance_Skag_Scar'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, "T.K's Wave")
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Scar_TKsWave')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, "T.K's Wave")
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.CShotgun.Pool_Bulldog_TKsWave')
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.CShotgun.Pool_Bulldog')
         return super().on_enemy_death()
@@ -345,8 +349,9 @@ class Reaver(Enemy):
     balance_state = 'gd_Balance_Enemies_Humans.Bandits.Named.Pawn_Balance_Reaver'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, "Reaver's Edge")
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Weapons_Reaver')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, "Reaver's Edge")
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.SemiSniper.Pool_Penetrator_ReaversEdge')
         if roll_for_drop(MEDIUM):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.SemiSniper.Pool_Penetrator')
         return super().on_enemy_death()
@@ -357,20 +362,32 @@ class Slither(Enemy):
 
     def on_enemy_death(self):
         remove_item(self.pawn.InvManager, "The Dove")
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Slither_TheDove')
+        if roll_for_drop(VERY_LOW):
+            self.items_to_drop.append('DedicatedDropsPools.CustomPools.Slither_TheDove')
+        else:
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_TheDove')
+
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_Hornet')
         return super().on_enemy_death()
-    
 
+set_rakkinishu:bool = False
 class Rakkinishu(Enemy):
     balance_state = 'gd_Balance_Enemies_Creatures.Rakk.Pawn_Balance_Rakk_Rakkinishu'
 
     def on_enemy_death(self):
+        global set_rakkinishu
+        if not set_rakkinishu:
+            ai_def = find_object("AIPawnBalanceDefinition", self.balance_state)
+            for item in ai_def.DefaultItemPoolList:
+                if item.ItemPool._path_name() == 'gd_itempools.BOSSPools.Pool_Rakkinishu_Shield':
+                    item.ItemPool.BalancedItems[0].Probability.BaseValueConstant = 1 
+                    item.ItemPool.BalancedItems[0].Probability.InitializationDefinition = None
+                    item.ObjectFlags |= 0x4000
+                    break
+            set_rakkinishu = True
         remove_item(self.pawn.InvManager, "The Sentinel")
         self.items_to_drop.append('DedicatedDropsPools.CustomPools.Rakkinishu_TheSentinel')
-        remove_item(self.pawn.InvManager, "Cracked Sash")
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Pool_Rakkinishu_Shield')
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.LMG.Pool_Draco')
         return super().on_enemy_death()
@@ -483,7 +500,13 @@ class WhiskeyWesley(Enemy):
     balance_state = 'dlc1_gd_balance_enemies.WereSkag.Pawn_Balance_WhiskeyWesley'
 
     def on_enemy_death(self):
-        self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Pool_Loyalty_Roland')
+        com_chance = randint(1,100)
+        if com_chance >= 66:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Roland.Pool_Atlas_Champion')
+        elif com_chance >= 33:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Roland.Pool_SnS_Gunman')
+        else:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Roland.Pool_Vladoff_Patriot')
         return super().on_enemy_death()
     
 
@@ -491,7 +514,13 @@ class Bigfoot(Enemy):
     balance_state = 'dlc1_gd_balance_enemies.WereSkag.Pawn_Balance_BigFoot'
 
     def on_enemy_death(self):
-        self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Pool_Loyalty_Mord')
+        com_chance = randint(1,100)
+        if com_chance >= 66:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Mordecai.Pool_Anshin_PeaceKeeper')
+        elif com_chance >= 33:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Mordecai.Pool_Hyperion_Sharpshooter')
+        else:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Mordecai.Pool_Jakobs_Gunfighter')
         return super().on_enemy_death()    
     
 
@@ -499,7 +528,13 @@ class Redjack(Enemy):
     balance_state = 'dlc1_gd_balance_enemies.WereSkag.Pawn_Balance_RedJack'
 
     def on_enemy_death(self):
-        self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Pool_Loyalty_Lilith')
+        com_chance = randint(1,100)
+        if com_chance >= 66:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Lilith.Pool_Dahl_Professional')
+        elif com_chance >= 33:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Lilith.Pool_Eridian_Warrior')
+        else:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Lilith.Pool_Maliwan_Specialist')
         return super().on_enemy_death()
         
 
@@ -507,7 +542,13 @@ class JackieOCallahan(Enemy):
     balance_state = 'dlc1_gd_balance_enemies.WereSkag.Pawn_Balance_FatherOCallahan'
 
     def on_enemy_death(self):
-        self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Pool_Loyalty_Brick')
+        com_chance = randint(1,100)
+        if com_chance >= 66:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Brick.Pool_CommonMan_Tediore')
+        elif com_chance >= 33:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Brick.Pool_Pangolin_Tank')
+        else:
+            self.items_to_drop.append('DedicatedDropsGear.Coms.Pools.Loyalty.Brick.Pool_Torgue_Badass')
         return super().on_enemy_death()
     
 
@@ -526,7 +567,11 @@ class Vulcana(Enemy):
     balance_state = 'dlc3_gd_balance_enemies.CrimsonLance.Named.Pawn_Balance_CLAssassinNamed1'
 
     def on_enemy_death(self):
-        self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_Protector_ChiquitoAmigo')
+        if roll_for_drop(VERY_LOW):
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_Protector_ChiquitoAmigo')
+        else:
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_ChiquitoAmigo')
+
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_Protector')
         return super().on_enemy_death()
@@ -546,9 +591,13 @@ class Knoxx(Enemy):
 
     def on_enemy_death(self):
         if roll_for_drop(MEDIUM):
-            self.items_to_drop.append('DedicatedDropsWeapons.Pools.MP.Pool_Vengeance')
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_InvaderPistol')
         if roll_for_drop(VERY_LOW):
-            self.items_to_drop.append('DedicatedDropsPools.CustomPools.Knoxx_1Percent')
+            hybrid_chance = randint(1,100)
+            if hybrid_chance >= 25:
+                self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_Nemesis')
+            else:
+                self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_Nemesis_Invader')
         return super().on_enemy_death()    
    
 
@@ -577,9 +626,11 @@ class Chaz(Enemy):
     balance_state = 'dlc3_gd_balance_enemies.Prisoners.Named.Pawn_Balance_Chaz'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, 'Bone Shredder')
-        self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_BoneShredder_Savior')
-        if roll_for_drop(MEDIUM):
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, 'Bone Shredder')
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_BoneShredder_Savior')
+
+        if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_Savior')
         return super().on_enemy_death()    
     
@@ -588,8 +639,9 @@ class Kyros(Enemy):
     balance_state = 'dlc3_gd_balance_enemies.CrimsonLance.Named.Pawn_Balance_Kyros'
 
     def on_enemy_death(self):
-        remove_item(self.pawn.InvManager, "Kyros' Power")
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Weapons_Unique_Kyros')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn.InvManager, "Kyros' Power")
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.BoltSniper.Pool_Cyclops_KyrosPower')
         if roll_for_drop(MEDIUM):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.BoltSniper.Pool_Cyclops')
         return super().on_enemy_death()    
@@ -600,7 +652,7 @@ class Typhon(Enemy):
 
     def on_enemy_death(self):
         if roll_for_drop(MEDIUM):
-            self.items_to_drop.append('DedicatedDropsWeapons.Pools.Repeaters.Pool_InvaderPistol')
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.MP.Pool_Vengeance')
         if roll_for_drop(VERY_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.SMG.Pool_Tsunami')
         return super().on_enemy_death()    
@@ -630,8 +682,9 @@ class Ajax(Enemy):
     balance_state = 'dlc3_gd_balance_enemies.CrimsonLance.Named.Pawn_Balance_Ajax'
 
     def on_enemy_death(self):
-        remove_item(self.pawn, "Ajax's Spear")
-        self.items_to_drop.append('DedicatedDropsPools.CustomPools.Weapons_Unique_Ajax')
+        if roll_for_drop(VERY_LOW):
+            remove_item(self.pawn, "Ajax's Spear")
+            self.items_to_drop.append('DedicatedDropsWeapons.Pools.LMG.Pool_Ogre_AjaxSpear')
         if roll_for_drop(MEDIUM):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.LMG.Pool_Ogre')
         return super().on_enemy_death()    
