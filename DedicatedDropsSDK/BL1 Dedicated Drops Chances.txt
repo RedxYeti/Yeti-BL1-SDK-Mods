@@ -1,0 +1,216 @@
+Pinky:
+Equalizer 15%
+
+Digit:
+Anaconda 15%
+
+Nine Toes:
+Clipper 100% / Troll 20% / Stalker 2%
+
+Scar:
+TK Wave 100% / Bulldog 15% / Hybrid 2%
+
+Bone Head:
+Bone Shredder 100% / Savior 15% / Hybrid 2%
+
+Roid Rage Psycho:
+Redemption 20% / Undertaker 2%
+
+Moe:
+Lady Finger 100% / Volcano 20%
+
+Marley:
+Rider 100% / Orion 20%
+
+Sledge:
+Sledge’s Shotgun 100% / Striker 20%
+
+Mad Mel:
+Mongol 15% / Serpens 2%
+
+Skagzilla:
+Whitting's Elephant Gun 100% / Skullmasher 15% / Bessie 2%
+
+King Wee Wee:
+Wee Wee Super Booster 100% / Spy 100% / Bitch 20% / Rose 2%
+
+One-Eyed Jack:
+Madjack 100% / Defiler 15%
+
+Mothrakk: (Loot Spawns at torches)
+Blister 100% / The Crux (Corrosive) 20%
+
+Rakkinishu:
+Sentinel 100% / Cracked Sash 100% / Draco 15% 
+
+Krom:
+Krom’s Sidearm 100% / Unforgiven 25%
+
+Reaver:
+Reaver’s Edge 100% / Penetrator 20% / Hybrid 2%
+
+Jaynis Kobb:
+Meat Grinder 100% / Bastard 15%
+
+Slither:
+Dove 100% / Hornet 15% / Hybrid 2%
+
+Widowmaker:
+Cobra 15%
+
+Helob:
+Invader (Sniper) 15%
+
+Taylor Kobb:
+Roaster 100% / Rhino 15% / Hybrid 2%
+
+Bleeder:
+Nailer 100% / Surkov 15%
+
+Queen Tarantella:
+Patton 100% / Chimera 20%
+
+King Aracobb:
+Rebel 20%
+
+Rakk Hive:
+Leviathan 100% / Nidhogg 20% / Jackal 2%
+
+Hanz:
+Violator 20%
+
+Franz:
+Gasher 20%
+
+Baron Flynt:
+Boom Stick 100% / Friendly Fire 20% / Hybrid 2%
+
+Master McCloud:
+Cannon 100% / Mega Cannon 20%
+
+Skrappy “all grown up”:
+Bulldog 15%
+
+The Destroyer:
+Destroyer 15% / Legendary Eridians 15% / Ironclad 2%
+
+Bloated/Tumescent Rakk:
+Random Legendary 3%
+
+Pumpkinhead:
+Hellfire 15%
+
+Hank Reiss:
+Firehawk 15%
+
+Franken Bill:
+Orion 20% / Omega 2%
+
+Whiskey Wesley:
+Patriot / Gunman / Champion COMs 100%
+
+Bigfoot:
+Sharpshooter / Peace Keeper / Gunfighter COMs 100%
+
+Redjack:
+Specialist / Professional / Eridian Warrior COMs 100%
+
+Jackie O’Callahan:
+Tank / Common Man / Badass COMs 100%
+
+Dr. Ned:
+Wildcat 15%
+
+Undead Dr. Ned:
+Defiler 15%
+
+Loot Goon:
+Random Legendary 10%
+
+Vulcana:
+Chiquito Amigo 100% / Protector 15% / Hybrid 2%
+
+Hera:
+Athena’s Wisdom 100% / Specter COM 33%
+
+Minerva:
+Ogre COM 33% / Firebomb 20%
+
+Ceresia:
+Truxican Wrestler COM 33% / Defender 15%
+
+Helicon:
+Marine COM 33% / Troll 20%
+
+Motorhead:
+Chopper 15% / Hammer 15%
+
+Mr. Shank:
+Reaper 20%
+
+Chaz:
+Bone Shredder 100% / Savior 20% / Hybrid 2%
+
+Kyros:
+Kyros’ Power 100% / Cyclops 20% / Hybrid 2%
+
+Typhon:
+Typhoon 100% / Invader (Pistol) 20% / Tsunami 2%
+
+Skyscraper:
+Stampeding Spatter 20%
+
+Ajax:
+Ajax Spear 100% / Ogre 15% / Hybrid 2%
+
+General Knoxx:
+Knoxx’s Gold 100% / Vengeance 20% / Nemesis 2% / Hybrid 2%
+
+Badass Devastator:
+Marine COM 33%
+
+Meat Popsicle:
+Random Legendary 8%
+
+Dumpster Diver:
+Random Legendary 8%
+
+Truxican Wrestler:
+Truxican Wrestler 33% / Random Legendary 8%
+
+Mini Steve:
+Random Legendary 8%
+
+Crimson Shorty:
+Random Legendary 8%
+
+Hyperion ‘Super Bad’ Soldier:
+Butcher 15%
+
+General Knoxx-Trap:
+Gemini 20%
+
+Cluck-Trap:
+Guardian 20%
+
+Dr. Ned-Trap:
+Raven 15% / Aries 2%
+
+D-Fault:
+Hydra 20%
+
+Commandant Steele-Trap:
+Thanatos 20%
+
+Rakk Hive-Trap:
+Mongol 20%
+
+Undead Ned-Trap:
+The Crux (Explosive) 20%
+
+Mega Interplanetary Ninja Assassin Claptrap:
+Nidhogg 15%
+
+Interplanetary Ninja Assassin Claptrap:
+Revolution 20% / Avenger 2%
+
