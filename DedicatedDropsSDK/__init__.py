@@ -1,6 +1,6 @@
 from typing import Any #type:ignore
-from mods_base import hook, build_mod, keybind, get_pc #type:ignore
-from unrealsdk.hooks import Type #type:ignore
+from mods_base import hook, build_mod, keybind, get_pc,BoolOption #type:ignore
+from unrealsdk.hooks import Type, Block #type:ignore
 from unrealsdk.unreal import BoundFunction, UObject, WrappedStruct #type:ignore
 from .maps import Map
 from .enemies import Enemy
@@ -41,6 +41,14 @@ def AnyPawnDied(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction
         enemy_inst.on_enemy_death()
 
 
+@hook("WillowGame.WillowPlayerController:openl", Type.PRE)
+def LoadGameCheck(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> Any:
+    print(args)
+    if not oidOasis.value and args.openurl == 'Scrap_Oasis_P?listen':
+        func('Arid_Arena_Coliseum_P?listen')
+        return Block
+        
+        
 @keybind("Reload Map",description="Saves the game, then fully reloads the current map you're in.")
 def reload_map():
     pc = get_pc()
@@ -48,4 +56,29 @@ def reload_map():
     current_map = pc.WorldInfo.GetMapName()
     pc.ConsoleCommand(f"openl {current_map}")
 
-build_mod()
+
+def xp_gain_toggled(option, new_value):
+    value = 0 if new_value else 1
+    get_pc().ConsoleCommand(f"set ExperienceResourcePool ExpAllPointsScale {value}")
+
+
+oidBlockXPGain = BoolOption(
+    "Block XP Gain",
+    False,
+    "On",
+    "Off",
+    description=f"Stops XP Gain for farming.",
+    on_change=xp_gain_toggled
+)
+
+oidOasis = BoolOption(
+    "Oasis Installed",
+    False,
+    "On",
+    "Off",
+    description=f"Turn this on if you have oasis installed.",
+    on_change=xp_gain_toggled
+)
+
+
+build_mod(options=[oidBlockXPGain, oidOasis])
