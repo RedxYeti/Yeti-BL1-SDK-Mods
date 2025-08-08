@@ -43,7 +43,6 @@ def AnyPawnDied(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction
 
 @hook("WillowGame.WillowPlayerController:openl", Type.PRE)
 def LoadGameCheck(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> Any:
-    print(args)
     if not oidOasis.value and args.openurl == 'Scrap_Oasis_P?listen':
         func('Arid_Arena_Coliseum_P?listen')
         return Block

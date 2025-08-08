@@ -1,4 +1,4 @@
-from mods_base import ObjectFlags,get_pc
+from mods_base import get_pc
 from unrealsdk import find_object,find_class,load_package,make_struct
 from unrealsdk.unreal import UObject 
 from random import randint
@@ -248,7 +248,7 @@ class Destroyer(Enemy):
         load_package('DedicatedDropsGear')
         load_package('DedicatedDropsPools')
         destroyer_death = find_object('BodyClassDeathDefinition','gd_VaultBoss_Main.Character.BodyDeath_VaultBoss_Main')
-        destroyer_death.ObjectFlags = ObjectFlags.KEEP_ALIVE
+        destroyer_death.ObjectFlags |= 0x4000
         
         destroyer_pools = [
             "DedicatedDropsPools.Pools.DestroyerGear.BossPool_Destroyer_Brick",
