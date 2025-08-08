@@ -155,7 +155,7 @@ Kyros:
 Kyros’ Power 100% / Cyclops 20% / Hybrid 2%
 
 Typhon:
-Typhoon 100% / Invader (Pistol) 20% / Tsunami 2%
+Typhoon 100% / Vengeance 20% / Tsunami 2%
 
 Skyscraper:
 Stampeding Spatter 20%
@@ -164,7 +164,7 @@ Ajax:
 Ajax Spear 100% / Ogre 15% / Hybrid 2%
 
 General Knoxx:
-Knoxx’s Gold 100% / Vengeance 20% / Nemesis 2% / Hybrid 2%
+Knoxx’s Gold 100% / Invader (Pistol) 20% / Nemesis 2% / Hybrid 2%
 
 Badass Devastator:
 Marine COM 33%
