@@ -1,0 +1,12 @@
+[project]
+name = "DLCFastTravel"
+version = "1.0.0"
+authors = [{ name = "Yeti, Miner" } ]
+description = "Adds fast travels to all of the story DLCs. Works coop!"
+
+[tool.sdkmod]
+name = "DLC Fast Travel"
+mod_type = "Standard" # or "Library"
+supported_games = ["BL1"]
+coop_support = "RequiresAllPlayers"
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
