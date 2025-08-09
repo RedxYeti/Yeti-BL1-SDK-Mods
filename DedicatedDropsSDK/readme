@@ -11,15 +11,8 @@ Download DedicatedDropsSDK.zip  https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/ra
 
 Merge the Borderlands folder with your main borderlands folder \SteamLibrary\steamapps\common\Borderlands
 
-Download FullDLCFastTravelHUB.rar from https://code.google.com/archive/p/s6fulldlcfasttravels/downloads
-
-Navigate to SteamLibrary\steamapps\common\Borderlands\WillowGame\CookedPC\Maps\Arid
-
-Backup the file Arid_Arena_Coliseum_P
-
-Rename "Mapslot6.umap" in the fast travel hub you downloaded to Arid_Arena_Coliseum_P and move it into the Arid folder
-
-Now your fyrestone coliseum will be a fast way to get to dlc maps
+Install DLCFastTravelSDK as the drop rates are based on this mod, installs the same way
+https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/DLCFastTravelSDK/DLCFastTravelSDK.zip
 
 Optiontal:
 Download the dedicated drops chances text file for a local way of looking them up
