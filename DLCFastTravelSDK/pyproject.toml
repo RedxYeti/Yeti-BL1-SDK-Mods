@@ -9,5 +9,7 @@ name = "DLC Fast Travel"
 mod_type = "Standard"
 supported_games = ["BL1"]
 coop_support = "RequiresAllPlayers"
+download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/tree/main/DLCFastTravelSDK"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+
 
