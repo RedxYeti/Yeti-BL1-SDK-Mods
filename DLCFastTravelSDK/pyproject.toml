@@ -6,7 +6,8 @@ description = "Adds fast travels to all of the story DLCs. Works coop!"
 
 [tool.sdkmod]
 name = "DLC Fast Travel"
-mod_type = "Standard" # or "Library"
+mod_type = "Standard"
 supported_games = ["BL1"]
 coop_support = "RequiresAllPlayers"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+
