@@ -54,16 +54,17 @@ def wgi_TravelToOutpost(obj: UObject, args: WrappedStruct, ret: Any, func: Bound
     last_teleport_station = args.OutpostName
 
 
+
+
 @hook("WillowGame.WillowGameInfo:PreCommitMapChange", Type.POST)
 def PreCommitMapChange(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> None:
     map_name = args.NextMapName
-    print(map_name)
+    #print(map_name)
     map_class = FastTravelOutpost.map_registry.get(map_name)
     if map_class:
         map_class().map_loaded()
 
     return
-
 
 
 class FastTravelOutpost():
@@ -80,6 +81,7 @@ class FastTravelOutpost():
         self.location:WrappedStruct
         self.rotation:WrappedStruct
         self.notes:dict
+        self.dogleg_fix:list
     
     def map_loaded(self):
         fast_travel = find_object('EmergencyTeleportOutpost', self.tp_object)
@@ -106,6 +108,18 @@ class FastTravelOutpost():
             last_teleport_station = ""
             get_pc().WorldInfo.Game.TeleporterDestinationString = self.tp_object
 
+            if self.name == "ABCFastTravel":
+                kismet = find_object("SeqVar_Int", "DLC4_Arid_badlands_p.TheWorld:PersistentLevel.Main_Sequence.SeqVar_Int_1")
+                kismet.bLinkToAttribute = False
+                kismet.IntValue = 60
+
+                tp_dest = find_object("TeleporterDestination",'DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.TeleporterDestination_2')
+                tp_dest.ExitPoints = [
+                    find_object('Note','DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.Note_20'),
+                    find_object('Note','DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.Note_21'),
+                    find_object('Note','DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.Note_22'),
+                    find_object('Note','DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.Note_23'),
+                ]
 
 @dataclass
 class ObjectTransform:
@@ -435,7 +449,7 @@ class AridBadlandsRobo(FastTravelOutpost):
     outpost_lookup_index = 79
     tp_object= 'DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.EmergencyTeleportOutpost_11'
     name = "ABCFastTravel"
-    rotation=make_struct('Rotator',Yaw=47068)
+    rotation=make_struct('Rotator',Yaw=81249)
 
     def map_loaded(self):
         return super().map_loaded()
