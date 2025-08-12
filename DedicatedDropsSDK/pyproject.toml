@@ -1,6 +1,6 @@
 [project]
 name = "DedicatedDrops"
-version = "1.1.1"
+version = "1.1.5"
 authors = [{ name = "RedxYeti" }]
 description = "Adds dedicated loot sources to enemies across the game. Coop supported!"
 
