@@ -14,5 +14,28 @@ Merge the Borderlands folder with your main borderlands folder \SteamLibrary\ste
 Install DLCFastTravelSDK as the drop rates are based on this mod, installs the same way
 https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/DLCFastTravelSDK/DLCFastTravelSDK.zip
 
-Optiontal:
-Download the dedicated drops chances text file for a local way of looking them up
+
+Updates:
+1.1.5:
+added a button in the options to open the drop chances file
+added a slider that lets you control the quality of drops, click its description for more info
+fixed the reload key not putting you midway points in a few maps
+fixed wayward pass and arid badlands robolution from being blackscreen after hitting the map reload key
+fixed having to hit a trigger to spawn marcus in the arid badlands robolution
+
+
+1.1.1:
+made Hera's squad spawn right away instead of having to hit the trigger every time
+
+
+1.1.0:
+changed how loyalty coms drop so theyre no longer affected by manufacturer rarity
+changed how hybrids drop
+remember, you wont know if the hybrid is going to drop based on the weapon the boss is holding.
+
+
+1.0.1:
+swapped the vengeance and invader pistol so knoxx has the same weapons for the hybrid
+slightly buffed the nemesis invader chances
+
+
