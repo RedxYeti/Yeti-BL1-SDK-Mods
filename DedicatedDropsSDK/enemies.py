@@ -1,7 +1,19 @@
-from mods_base import get_pc
+from mods_base import get_pc, SliderOption
 from unrealsdk import find_object,find_class,load_package,make_struct
 from unrealsdk.unreal import UObject 
 from random import randint
+
+oidALSlider = SliderOption(
+    "Loot Scale Mult",
+    4,
+    0.1,
+    10,
+    0.1,
+    False,
+    description="Item part quality scales with your player level. If you don't like the quality of your drops at your current level, lower this for worse parts or increase it for better parts.\nThe option slider only shows values that end in 0.5 increments so youll have to count. :)"
+)
+
+
 
 VERY_LOW:int = 2
 LOW:int = 10
@@ -15,7 +27,7 @@ item_pool_default = find_class('ItemPool').ClassDefaultObject
 
 def spawn_item(pool_def:UObject,pawn:UObject,awesome_level:int) -> UObject:
     _, new_items = item_pool_default.SpawnBalancedInventoryFromPool(
-                    pool_def, pawn.GetGameStage(), awesome_level, pawn, []
+                    pool_def, pawn.GetGameStage(), oidALSlider.value, pawn, []
                     )
     return new_items[0]
 
@@ -66,7 +78,7 @@ class Enemy:
             load_package('DedicatedDropsWeapons')
             load_package('DedicatedDropsGear')
             load_package('DedicatedDropsPools')
-            awesome_level = int(get_pc().Pawn.GetExpLevel() * 4.5)
+            awesome_level = int(get_pc().Pawn.GetExpLevel() * oidALSlider.value)
             for item in self.items_to_drop:
                 pool_def = find_object('ItemPoolDefinition', item)
                 spawned_item = spawn_item(pool_def, self.pawn, awesome_level)

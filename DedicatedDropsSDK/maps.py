@@ -9,7 +9,7 @@ def get_mission_status(mission_name:str) -> int:
     for mission in pc.MissionPlaythroughData[PlayThroughNumber].MissionList:
         if mission.MissionDef == in_mission:
             return mission.Status
-    return -1
+    return 0
 
 def make_new_link(link_op:UObject, index:int = 0) -> WrappedStruct:
     return make_struct("SeqOpOutputInputLink",
@@ -161,10 +161,9 @@ class DeepFathoms(Map):
     name = "dlc3_southlake_p"
 
     def on_map_loaded(self):
-        assassin_mission_kismet =  find_object("Object", "dlc3_SOUTHLAKE_dynamic.TheWorld:PersistentLevel.Main_Sequence.Assassins.WillowSeqEvent_MissionObjectiveComplete_0")
-        assassin_mission_kismet.bEnabled = get_mission_status('dlc3_SideMissions.SideMissions.M_dlc3_Hitman') != 4
-        assassin_trigger_vol = find_object("Object", "dlc3_SOUTHLAKE_dynamic.TheWorld:PersistentLevel.Main_Sequence.Assassins.SeqEvent_Touch_0")
-        assassin_trigger_vol.bEnabled = get_mission_status('dlc3_SideMissions.SideMissions.M_dlc3_Hitman') == 4
+        assassin_mission_mission =  find_object("Object", "dlc3_SOUTHLAKE_dynamic.TheWorld:PersistentLevel.Main_Sequence.Assassins.WillowSeqEvent_MissionStatusChanged_0")
+        assassin_mission_kismet = find_object("Object", "dlc3_SOUTHLAKE_dynamic.TheWorld:PersistentLevel.Main_Sequence.Assassins.SeqAct_Interp_0")
+        assassin_mission_mission.OutputLinks[3].Links = [make_new_link(assassin_mission_kismet)]
 
 
 class RoadsEnd(Map):
@@ -238,6 +237,10 @@ class DLC4AridBadlands(Map):
 
     def on_map_loaded(self):
         if get_mission_status("DLC4_Wayward_Pass_Missions.MainMissions.M_dlc4_OTCT_Reboot") == 4:
+            minac_trigger = find_object('WillowTrigger','DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.WillowTrigger_0')
+            minac_trigger.CylinderComponent.CollisionHeight = 20000
+            minac_trigger.CylinderComponent.CollisionRadius = 20000
+
             trigger_touch_kismet = find_object("Object", "DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.Main_Sequence.MINAC_Fight.SeqEvent_Touch_35")
             bink_movie_kismet = find_object("Object", "DLC4_Arid_Badlands_p.TheWorld:PersistentLevel.Main_Sequence.MINAC_Fight.SeqAct_PlayBinkMovie_1")
             trigger_touch_kismet.OutputLinks[0].Links[0].LinkedOp = None
