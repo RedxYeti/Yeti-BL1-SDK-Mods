@@ -27,7 +27,7 @@ item_pool_default = find_class('ItemPool').ClassDefaultObject
 
 def spawn_item(pool_def:UObject,pawn:UObject,awesome_level:int) -> UObject:
     _, new_items = item_pool_default.SpawnBalancedInventoryFromPool(
-                    pool_def, pawn.GetGameStage(), oidALSlider.value, pawn, []
+                    pool_def, pawn.GetGameStage(), int(get_pc().Pawn.GetExpLevel() * oidALSlider.value), pawn, []
                     )
     return new_items[0]
 
@@ -290,9 +290,12 @@ class Scar(Enemy):
     balance_state = 'gd_Balance_Enemies_Creatures.Skags.Pawn_Balance_Skag_Scar'
 
     def on_enemy_death(self):
+        remove_item(self.pawn.InvManager, "T.K's Wave")
         if roll_for_drop(VERY_LOW):
-            remove_item(self.pawn.InvManager, "T.K's Wave")
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.CShotgun.Pool_Bulldog_TKsWave')
+        else:
+            self.items_to_drop.append("DedicatedDropsWeapons.Pools.CShotgun.Pool_TKsWave")
+
         if roll_for_drop(MEDIUM_LOW):
             self.items_to_drop.append('DedicatedDropsWeapons.Pools.CShotgun.Pool_Bulldog')
         return super().on_enemy_death()
