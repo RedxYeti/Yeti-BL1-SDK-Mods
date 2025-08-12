@@ -22,6 +22,7 @@ added a slider that lets you control the quality of drops, click its description
 fixed the reload key not putting you midway points in a few maps
 fixed wayward pass and arid badlands robolution from being blackscreen after hitting the map reload key
 fixed having to hit a trigger to spawn marcus in the arid badlands robolution
+fixed scar not dropping tk's wave after the hybrid update
 
 
 1.1.1:
