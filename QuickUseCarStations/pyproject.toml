@@ -1,0 +1,13 @@
+[project]
+name = "QuickUseCarStations"
+version = "1.0.0"
+authors = [{ name = "yeti" }]
+description = "Quickly spawn a car using a hotkey."
+
+[tool.sdkmod]
+name = "Quick Use Car Stations"
+mod_type = "Standard"
+supported_games = ["BL1"]
+coop_support = "Unknown"
+download = ""
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
