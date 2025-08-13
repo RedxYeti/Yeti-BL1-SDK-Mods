@@ -1,6 +1,6 @@
 [project]
 name = "QuickUseVendors"
-version = "1.0.0"
+version = "1.1.0"
 authors = [{ name = "yeti" }]
 description = "Max out your ammo or health with a hotkey at Vendors."
 
@@ -11,3 +11,4 @@ supported_games = "BL1"
 coop_support = "Unknown"
 auto_enable = "False"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+
