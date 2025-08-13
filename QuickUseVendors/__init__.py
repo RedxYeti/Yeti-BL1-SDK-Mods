@@ -173,8 +173,8 @@ def KeyBindHit():
                 for i in range(int(value[2])):
                     CurrentVendor.PlayerBuyItem(CurrentVendor.ShopInventory[GrenadeIndex], CurrentPC)
             GrenadeIndex += 1
-
-        CurrentPC.myHUD.HUDMovie.ClearTrainingText(0)
+        if oidShowMessage.value:
+            CurrentPC.myHUD.HUDMovie.ClearTrainingText(0)
         bLookingAtVendor = False
         bCanBuy = False
         bCanBuyHealth = False
@@ -196,8 +196,8 @@ def KeyBindHit():
 
         for i in range(int(HealthVials[MostHealthBack[0]][2])):
             CurrentVendor.PlayerBuyItem(CurrentVendor.ShopInventory[VialIndex], CurrentPC)
-
-        CurrentPC.myHUD.HUDMovie.ClearTrainingText(0)
+        if oidShowMessage.value:
+            CurrentPC.myHUD.HUDMovie.ClearTrainingText(0)
         bLookingAtVendor = False
         bCanBuy = False
         bCanBuyHealth = False
@@ -273,7 +273,8 @@ def ShowToolTip(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction
         CurrentVendor = None
         bLookingAtVendor = False
         PC = obj.WPlayerOwner[0]
-        obj.ClearTrainingText(0)
+        if oidShowMessage.value:
+            obj.ClearTrainingText(0)
 
 
 oidShowMessage = BoolOption(
