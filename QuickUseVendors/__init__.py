@@ -1,8 +1,8 @@
 from unrealsdk import find_object, load_package, make_struct #type: ignore
 from unrealsdk.hooks import Type #type: ignore
 from unrealsdk.unreal import UObject, WrappedStruct, BoundFunction #type: ignore
-from mods_base import build_mod, EInputEvent, keybind, hook #type: ignore
-
+from mods_base import build_mod, EInputEvent, keybind, hook, BoolOption #type: ignore
+from typing import Any
 bLookingAtVendor: bool = False
 bCanBuy: bool = False
 bCanBuyHealth: bool = False
@@ -82,6 +82,8 @@ def FirstTimeSetup():
 
 #stolen from ry :)
 def display_hud_message(pc, title: str, msg: str, msg_type: int = 0, duration: float = 1.5):
+    if not oidShowMessage.value:
+        return
     white = make_struct("Core.Object.Color", B=255, G=255, R=255, A=255)
 
     hud = pc.myHUD
@@ -141,13 +143,17 @@ def GetCostHealth(PC, VendingMachine):
                 NeededAmount = (MaxValue - CurrentValue + AmmoPer - 1) // AmmoPer
                 Cost = (NeededAmount * HealthVials[MostHealthBack[0]][1])
             HealthVials[MostHealthBack[0]][2] = NeededAmount
-            break
+        
     return Cost
 
 
 @keybind(identifier="Purchase Ammo", key=None, event_filter=EInputEvent.IE_Pressed)
 def KeyBindHit():
     global bCanBuy, CurrentPC, bLookingAtVendor, CurrentVendor, bCanBuyHealth, MostHealthBack
+
+    if not bLookingAtVendor or not CurrentPC or not CurrentVendor:
+        return
+
     if bCanBuy:
         CurrentPT = ResourcePoolsPT1 if CurrentPC.GetCurrentPlaythrough() == 0 else ResourcePoolsPT2
         CurrentPC.myHUD.HUDMovie.PlayUISound('ChaChing')
@@ -171,6 +177,7 @@ def KeyBindHit():
         CurrentPC.myHUD.HUDMovie.ClearTrainingText(0)
         bLookingAtVendor = False
         bCanBuy = False
+        bCanBuyHealth = False
         CurrentPC = None
         CurrentVendor = None
 
@@ -183,7 +190,7 @@ def KeyBindHit():
                 item = CurrentVendor.ShopInventory[i]
                 if item.DefinitionData.ItemDefinition.Name == MostHealthBack[0]:
                     VialIndex = i
-                    break
+
             except:
                 continue
 
@@ -192,15 +199,21 @@ def KeyBindHit():
 
         CurrentPC.myHUD.HUDMovie.ClearTrainingText(0)
         bLookingAtVendor = False
+        bCanBuy = False
         bCanBuyHealth = False
         CurrentPC = None
         CurrentVendor = None
-
+    
+    bLookingAtVendor = False
+    bCanBuyHealth = False
+    bCanBuy = False
+    CurrentPC = None
+    CurrentVendor = None
     return
 
 
 @hook("WillowGame.WillowHUDGFxMovie:ShowToolTip", Type.POST)
-def ShowToolTip(obj: UObject, args: WrappedStruct, ret: any, func: BoundFunction):
+def ShowToolTip(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     global bLookingAtVendor, bCanBuy, CurrentPC, CurrentVendor, bCanBuyHealth, bFirstTimeSetup
     if not bFirstTimeSetup:
         FirstTimeSetup()
@@ -255,11 +268,21 @@ def ShowToolTip(obj: UObject, args: WrappedStruct, ret: any, func: BoundFunction
 
     elif args.HUDIcon == 0 and bLookingAtVendor:
         bCanBuy = False
+        bCanBuyHealth = False
         CurrentPC = None
         CurrentVendor = None
         bLookingAtVendor = False
         PC = obj.WPlayerOwner[0]
         obj.ClearTrainingText(0)
+
+
+oidShowMessage = BoolOption(
+    "Show Message",
+    True,
+    "On",
+    "Off",
+    description="Enable or disable the hud message that shows when you look at the vendors."
+)
 
 
 build_mod()
