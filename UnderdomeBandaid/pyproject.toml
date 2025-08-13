@@ -1,0 +1,13 @@
+[project]
+name = "UnderdomeBandaid"
+version = "1.0.0"
+authors = [{ name = "Yeti" }]
+description = "Speeds up waves greatly. Options for better loot, XP gain, disabling specific rules, muting the crowd or Moxxi."
+
+[tool.sdkmod]
+name = "Underdome Bandaid"
+mod_type = "Standard"
+supported_games = ["BL1"]
+coop_support = "HostOnly"
+download = ""
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
