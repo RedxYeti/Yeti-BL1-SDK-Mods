@@ -1,7 +1,8 @@
 from mods_base import get_pc, SliderOption
 from unrealsdk import find_object,find_class,load_package,make_struct
 from unrealsdk.unreal import UObject 
-from random import randint
+from random import randint, Random
+import time
 
 oidALSlider = SliderOption(
     "Loot Scale Mult",
@@ -27,13 +28,14 @@ item_pool_default = find_class('ItemPool').ClassDefaultObject
 
 def spawn_item(pool_def:UObject,pawn:UObject,awesome_level:int) -> UObject:
     _, new_items = item_pool_default.SpawnBalancedInventoryFromPool(
-                    pool_def, pawn.GetGameStage(), int(get_pc().Pawn.GetExpLevel() * oidALSlider.value), pawn, []
+                    pool_def, pawn.GetGameStage(), int(awesome_level), pawn, []
                     )
     return new_items[0]
 
+rng = Random(time.time())
 
 def roll_for_drop(percent_chance:int) -> bool:
-    return randint(1, 100) <= percent_chance
+    return rng.randint(1, 100) <= percent_chance
 
 
 def remove_item(inv_manager:UObject,item_name:str) -> None:
