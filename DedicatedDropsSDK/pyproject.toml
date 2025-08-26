@@ -1,6 +1,6 @@
 [project]
 name = "DedicatedDrops"
-version = "1.1.5"
+version = "1.2.0"
 authors = [{ name = "RedxYeti" }]
 description = "Adds dedicated loot sources to enemies across the game. Coop supported!"
 
@@ -11,3 +11,4 @@ supported_games = ["BL1"]
 coop_support = "RequiresAllPlayers"
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/tree/main/DedicatedDropsSDK"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+
