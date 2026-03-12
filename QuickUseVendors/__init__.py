@@ -134,6 +134,8 @@ def GetCostHealth(PC, VendingMachine):
 
     Cost = 0
     for pool in PC.ResourcePoolManager.ResourcePools:
+        if not pool:
+            continue
         if pool.Definition.Name == "HealthPool":
             NeededAmount = 0
             if pool.CurrentValue < pool.MaxValue:
