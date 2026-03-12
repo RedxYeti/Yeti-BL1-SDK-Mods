@@ -400,7 +400,7 @@ class Rakkinishu(Enemy):
                 if item.ItemPool._path_name() == 'gd_itempools.BOSSPools.Pool_Rakkinishu_Shield':
                     item.ItemPool.BalancedItems[0].Probability.BaseValueConstant = 1 
                     item.ItemPool.BalancedItems[0].Probability.InitializationDefinition = None
-                    item.ObjectFlags |= 0x4000
+                    item.ItemPool.ObjectFlags |= 0x4000
                     break
             set_rakkinishu = True
         remove_item(self.pawn.InvManager, "The Sentinel")
