@@ -162,7 +162,6 @@ oidOasis = BoolOption(
     "On",
     "Off",
     description=f"Turn this on if you have oasis installed.",
-    on_change=xp_gain_toggled
 )
 
 

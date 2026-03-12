@@ -1,26 +1,28 @@
 import unrealsdk 
 import math
-
+from typing import Any
 from unrealsdk import find_all, make_struct, find_object, construct_object, load_package, find_class
 from unrealsdk.hooks import Type, Block
 from unrealsdk.unreal import UObject, WrappedStruct, BoundFunction, WeakPointer
-from mods_base import hook, get_pc, build_mod, Game
+from mods_base import hook, get_pc, build_mod, SETTINGS_DIR, SpinnerOption
 from random import choice, randint
 
 from .EnemyRandomizerOptions import oidEnemyAllegiance, oidStrictness, oidWanderingBosses, oidStaticBosses
-from .EnemyRandomizerFunctions import AllEnemies, BlacklistClasses, SkagAllegiance, PawnClass, LastKnownGameSave, PopDynamicClass, AllClass, SmallBosses, MediumBosses, LargeBosses, BossNames
-from .EnemyRandomizerFunctions import  MovePopulationPoints, GetPawnBalance, GenerateBossesForSave, RandomizeRapparee, keep_alive
+from .EnemyRandomizerFunctions import AllEnemies, BlacklistClasses, SkagAllegiance, PawnClass, PopDynamicClass, AllClass, BossNames
+from .EnemyRandomizerFunctions import  MovePopulationPoints, GetPawnBalance, RandomizeRapparee, keep_alive
 from .EnemyRandomizerLists import MapNames, CarPacks, BlacklistNames, GruntNames, BadassNames, BossNames, FlyingGruntNames, FlyingBadassNames, FlyingBossNames, TurretNames
+from .EnemyRandomizerSeeds import StaticBossesSeedMenu, SelectStaticBossesSeed, EditStaticBossesSeed, StaticBossesSeed
+
 
 #DynamicPointNames: list = ["Mount1", "MiddleMount", "FrontMount"]
 DynamicPointNames: list = ["TurretPoint", "INAC_Point"]
 bFirstTimeStartup: bool = False
-GameStageExact: UObject = None
+GameStageExact: UObject = None 
 
 #This has to be here instead of in functions, dont ask me why because i dont know
 #when it was in functions it wouldnt keep alive some enemies and it would set some enemies allegiance to none
 def FirstTimeStartup() -> None:
-    global bFirstTimeStartup, AllEnemies, SkagAllegiance, SmallBosses, MediumBosses, LargeBosses, BossNames, AllClass, GameStageExact
+    global bFirstTimeStartup, AllEnemies, SkagAllegiance, BossNames, AllClass, GameStageExact
 
     SkagAllegiance = find_object("PawnAllegiance","gd_allegiance.CreatureEnemy.SkagAllegiance")
     load_package("gd_Balance")
@@ -48,7 +50,7 @@ def FirstTimeStartup() -> None:
 
     #this iterates over every level and its streaming levels, loads them, and then sorts them in SortEnemiesForLevel()
     #Map names was created by loading every map and tracking which maps actually added to the find_all("AIPawnBalanceDefinition") in SortEnemiesForLevel()
-    #This can be recreated for any class
+    #This can be recreated for Any class
     lists = find_all("LevelDependencyList")
     for Entry in lists:
         for persistent in Entry.LevelList:
@@ -103,17 +105,12 @@ def FirstTimeStartup() -> None:
                             if oidEnemyAllegiance.value:
                                 AIPawnBalanceDef.AIPawnArchetype.Allegiance = SkagAllegiance
                             
-                            if DisplayName in BossNames and AIPawnBalanceDef.AIPawnArchetype and AIPawnBalanceDef.AIPawnArchetype.CylinderComponent:
-                                Height = AIPawnBalanceDef.AIPawnArchetype.CylinderComponent.CollisionHeight 
-                                if Height > 115 and DisplayName not in LargeBosses:
-                                    LargeBosses.append(DisplayName)
-                                elif Height < 115 and Height >= 74 and DisplayName not in MediumBosses:
-                                    MediumBosses.append(DisplayName)
-                                elif Height < 74 and DisplayName not in SmallBosses:
-                                    SmallBosses.append(DisplayName)
 
                 get_pc().ConsoleCommand("obj garbage")
 
+
+
+    
     AllClass = []
 
     BadTongue = find_object('AIPawnBalanceDefinition','gd_Tentacles.population.Pawn_Balance_Tentacle_Tongue')
@@ -137,7 +134,7 @@ def FirstTimeStartup() -> None:
 
 @hook("WillowGame.PopulationFactoryBalancedAIPawn:CreatePopulationActor", Type.PRE)
 @hook("WillowGame.PopulationFactoryBalancedAIPawn:RestorePopulatedAIPawn", Type.PRE)
-def CreatePopulationActor(obj: UObject, args: WrappedStruct, ret: any, func: BoundFunction) -> None:
+def CreatePopulationActor(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> Any:
     if args.SpawnLocationContextObject.Class.Name in BlacklistClasses:
         return
     
@@ -146,8 +143,7 @@ def CreatePopulationActor(obj: UObject, args: WrappedStruct, ret: any, func: Bou
 
 
     if not obj.PawnBalanceDefinition.Grades or not obj.PawnBalanceDefinition.Grades[0].GradeModifiers.DisplayName:
-        
-            return
+        return
         
     if args.SpawnLocationContextObject.Class._inherits(PopDynamicClass) and args.SpawnLocationContextObject.DynamicPointName not in DynamicPointNames:
         return
@@ -223,7 +219,7 @@ def CreatePopulationActor(obj: UObject, args: WrappedStruct, ret: any, func: Bou
 
 
 @hook("WillowGame.PopulationFactoryWillowVehicle:CreatePopulationActor", Type.PRE)
-def CreatePopulationActorVehicle(obj: UObject, args: WrappedStruct, ret: any, func: BoundFunction) -> None:
+def CreatePopulationActorVehicle(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> Any:
     if not args.SpawnLocationContextObject or not obj.VehicleArchetype:
         return
 
@@ -260,16 +256,10 @@ def CreatePopulationActorVehicle(obj: UObject, args: WrappedStruct, ret: any, fu
 
 
 @hook("WillowGame.WillowGameInfo:PreCommitMapChange", Type.POST)
-def PreCommitMapChange(obj: UObject, args: WrappedStruct, ret: any, func: BoundFunction) -> None:
+def PreCommitMapChange(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> None:
     global bFirstTimeStartup
     if not bFirstTimeStartup:
         FirstTimeStartup()
-
-
-    global LastKnownGameSave
-    if LastKnownGameSave == -1 or get_pc().GetWillowGlobals().GetWillowSaveGameManager().GetCachedPlayerProfile(0).SaveGameId != LastKnownGameSave:
-        if get_pc().GetWillowGlobals().GetWillowSaveGameManager().GetCachedPlayerProfile(0).SaveGameId != -1:
-            GenerateBossesForSave()
             
 
     if args.NextMapName: 
@@ -352,7 +342,19 @@ def PreCommitMapChange(obj: UObject, args: WrappedStruct, ret: any, func: BoundF
 
     return
 
-build_mod(options=[oidStrictness, oidWanderingBosses, oidEnemyAllegiance, oidStaticBosses])
+
+
+build_mod(options=[ oidStrictness, 
+                    oidWanderingBosses, 
+                    oidEnemyAllegiance, 
+                    oidStaticBosses,
+                    StaticBossesSeedMenu,
+                    EditStaticBossesSeed,
+                    SelectStaticBossesSeed],
+          on_enable=StaticBossesSeed.enable_seed,
+          on_disable=StaticBossesSeed.disable_seed)
+
+
 
 """
 TODO

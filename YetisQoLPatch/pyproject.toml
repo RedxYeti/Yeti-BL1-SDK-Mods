@@ -1,0 +1,13 @@
+[project]
+name = "YetisQoLPatch"
+version = "1.0.0"
+authors = [{ name = "Yeti" }]
+description = "Adds a range of QoL features, all with options."
+
+[tool.sdkmod]
+name = "Yeti's QoL Patch"
+mod_type = "Standard" 
+supported_games = "BL1"
+coop_support = "HostOnly"
+download = ""
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }

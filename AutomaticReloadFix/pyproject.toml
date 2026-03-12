@@ -1,0 +1,13 @@
+[project]
+name = "AutomaticReloadFix"
+version = "1.1"
+authors = [{ name = "Yeti" }]
+description = "Fixes weapons not automatically reloading when their magazines are empty from skills, vladof weapons, etc."
+
+[tool.sdkmod]
+name = "Automatic Reload Fix"
+supported_games = ["BL1","TPS","AODK","BL2"]
+license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+coop_support = "ClientSide"
+download = ""
+version = "1.1"

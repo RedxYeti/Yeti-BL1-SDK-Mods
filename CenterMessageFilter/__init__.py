@@ -1,255 +1,210 @@
-from mods_base import build_mod, hook, BoolOption,NestedOption, get_pc
-from unrealsdk import make_struct, find_object, load_package, find_class
-from unrealsdk.hooks import Type,Block,prevent_hooking_direct_calls
-from unrealsdk.unreal import UObject, WrappedStruct, BoundFunction,IGNORE_STRUCT
-
-from .rules import all_rules
-
+from mods_base import build_mod, get_pc, keybind, hook, BoolOption, SliderOption
+from unrealsdk import find_class, make_struct
+from unrealsdk.hooks import Type, Block, prevent_hooking_direct_calls
+from unrealsdk.unreal import UObject, WrappedStruct, BoundFunction, UClass
 from typing import Any
-import random 
-import math
-
-player_pools = [
-    "HealthPool",
-    "ShieldPool",
-    "Ammo_Patrol_SMG_Pool",
-    "Ammo_Repeater_Pistol_Pool",
-    "Ammo_Sniper_Rifle_Pool",
-    "Ammo_Grenade_Protean_Pool",
-    "Ammo_Combat_Rifle_Pool",
-    "Ammo_Revolver_Pistol_Pool",
-    "Ammo_Rocket_Launcher_Pool",
-    "Ammo_Combat_Shotgun_Pool",
-]
 
 
-def keep_alive(in_object:UObject) -> None:
-    in_object.ObjectFlags |= 0x4000
+def update_blacklist(option: BoolOption, new_value) -> None:
+    class_to_change = message_classes[option.identifier]
+    if new_value:
+        if class_to_change in class_blacklist:
+            class_blacklist.remove(class_to_change)
+    else:
+        class_blacklist.append(class_to_change)
     return
 
+oidMaxDuration: SliderOption = SliderOption(
+    "Max Message Duration",
+    10,
+    0,
+    10,
+    0.5,
+    False,
+    description=f"Set the maximum amount of time a message is allowed to show.\n0 will turn off all messages.\nMost messages are less than 7 seconds.",
+)
 
+oidMoney: BoolOption = BoolOption(
+    "Money",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
 
-@hook("WillowGame.WillowPlayerController:ClientColiseumNotify", Type.PRE)
-def ClientColiseumNotify(obj:UObject, _args:WrappedStruct, _ret:Any, _func:BoundFunction) -> Any:
-    if _args.NotifyType == 2:
-        for pool in obj.ResourcePoolManager.ResourcePools:
-            if pool and str(pool.Definition.Name) in player_pools:
-                pool.CurrentValue = pool.MaxValue
-        
-        if oidResetCooldowns.value and obj.SkillCooldownPool and obj.SkillCooldownPool.Data:
-            obj.SkillCooldownPool.Data.SetCurrentValue(0)
+oidAmmo: BoolOption = BoolOption(
+    "Ammo",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
 
-    return
+oidWeapons: BoolOption = BoolOption(
+    "Weapons",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
 
+oidGear: BoolOption = BoolOption(
+    "Gear",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
 
-@hook("WillowGame.WillowPlayerController:ClientStartColiseumTimer", Type.PRE)
-def ClientStartColiseumTimer(obj:UObject, _args:WrappedStruct, _ret:Any, _func:BoundFunction) -> Any:
-    if _args.CountdownLength == 1:
-        with prevent_hooking_direct_calls():
-            _func(6)
-            return Block
-    return
+oidNewMissions: BoolOption = BoolOption(
+    "New Missions",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
 
+oidMissionUpdates: BoolOption = BoolOption(
+    "Mission Updates",
+    True,
+    "Show",
+    "Hide",
+)
 
+oidChallenges: BoolOption = BoolOption(
+    "Challenges",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
 
-arena_names = ["dlc2_lobby_p","dlc2_hellburb_p", "dlc2_Gully_P", "dlc2_ruins_p"]
-@hook("WillowGame.WillowGameInfo:PreCommitMapChange", Type.POST)
-def PreCommitMapChange(obj:UObject, _args:WrappedStruct, _ret:Any, _func:BoundFunction) -> Any:
-    if _args.NextMapName not in arena_names:
+oidWeaponProf: BoolOption = BoolOption(
+    "Weapon Proficiencies",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
+
+oidSkillPoints: BoolOption = BoolOption(
+    "Skill Points",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
+
+oidOutposts: BoolOption = BoolOption(
+    "Outpost Discovery",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
+
+oidLevelUp: BoolOption = BoolOption(
+    "Level Up",
+    True,
+    "Show",
+    "Hide",
+    on_change=update_blacklist
+)
+
+oidMissionDrops: BoolOption = BoolOption(
+    "Mission Drops",
+    True,
+    "Show",
+    "Hide",
+)
+
+oidShops: BoolOption = BoolOption(
+    "Shops",
+    True,
+    "Show",
+    "Hide",
+)
+
+message_classes: dict = {
+    "Money": find_class("ReceivedCreditsMessage"),
+    "Ammo": find_class("ReceivedAmmoMessage"),
+    "Weapons": find_class("ReceivedWeaponMessage"),
+    "Gear": find_class("ReceivedItemMessage"),
+    "New Missions": find_class("MissionFeedbackMessage"),
+    "Challenges": find_class("ChallengeFeedbackMessage"),
+    "Weapon Proficiencies": find_class("WeaponProficiencyFeedbackMessage"),
+    "Skill Points": find_class("SkillPointsFeedbackMessage"),
+    "Outpost Discovery": find_class("OutpostDiscoveryMessage"),
+    "Level Up": find_class("ExperienceFeedbackMessage"),
+}
+
+class_blacklist: list = []
+
+@hook("WillowGame.WillowPlayerController:DisplayHUDMessage", Type.PRE)
+def DisplayHUDMessage(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> Any:
+    if oidMaxDuration.value <= 0:
         return
 
-    #classic gearbox, each map is just slightly different
-    if _args.NextMapName == "dlc2_hellburb_p":
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.SeqAct_Delay_0').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.SeqAct_Delay_3').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.Rules_UI.SeqAct_Delay_6').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.WaveStructure.SeqAct_Delay_14').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.WaveStructure.SeqAct_Delay_25').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.TimeBetweenRounds.SeqAct_Delay_0').Duration = 3
-        find_object('SeqAct_Delay','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.TimeBetweenRounds.SeqAct_Delay_5').Duration = 0
-
-        find_object('SeqEvent_RemoteEvent','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.LootSpawning.SeqEvent_RemoteEvent_1').bEnabled=False
-        find_object('SeqEvent_RemoteEvent','dlc2_hellburb_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.RoundLootReward.SeqEvent_RemoteEvent_35').bEnabled=False
+    if args.InMessageClass in class_blacklist:
+        return Block
     
-    elif _args.NextMapName == "dlc2_Gully_P":
-        find_object('SeqAct_Delay','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.SeqAct_Delay_0').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.SeqAct_Delay_3').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.Wave_Structure.SeqAct_Delay_14').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.Wave_Structure.SeqAct_Delay_25').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.TimeBetweenRounds.SeqAct_Delay_0').Duration = 3
-        find_object('SeqAct_Delay','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.TimeBetweenRounds.SeqAct_Delay_5').Duration = 0
-
-        find_object('SeqEvent_RemoteEvent','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.LootSpawn.SeqEvent_RemoteEvent_1').bEnabled=False
-        find_object('SeqEvent_RemoteEvent','dlc2_Gully_P.TheWorld:PersistentLevel.Main_Sequence.FightStructure.RoundLootReward.SeqEvent_RemoteEvent_35').bEnabled=False 
-
-    elif _args.NextMapName == "dlc2_ruins_p":
-        find_object('SeqAct_Delay','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.SeqAct_Delay_0').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.SeqAct_Delay_3').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.WaveStructure.SeqAct_Delay_1').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.WaveStructure.SeqAct_Delay_25').Duration = 0.25
-        find_object('SeqAct_Delay','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.TimeBetweenRounds.SeqAct_Delay_0').Duration = 3
-        find_object('SeqAct_Delay','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.TimeBetweenRounds.SeqAct_Delay_5').Duration = 0
-
-        find_object('SeqEvent_RemoteEvent','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.LootSpawning.SeqEvent_RemoteEvent_1').bEnabled=False
-        find_object('SeqEvent_RemoteEvent','dlc2_ruins_p.TheWorld:PersistentLevel.Main_Sequence.FightStructure.RoundLootReward.SeqEvent_RemoteEvent_35').bEnabled=False
+    #some messages dont have a class
+    if not oidMissionUpdates.value and args.MsgType == 4:
+        #this iterates over active missions to see if the objective is in the message string
+        for mission in obj.WorldInfo.Game.MissionTracker.MissionList:
+            for objective in mission.Objectives:
+                if objective.ProgressMessage in args.MessageString:
+                    return Block
     
-    elif _args.NextMapName == "dlc2_lobby_p":
-        global got_certificate
-        if got_certificate[0]:
-            hud_opened.enable()
+    
+    if (args.InMessageClass == message_classes["Gear"] 
+        and oidGear.value
+        and not oidMissionDrops.value):
+        for mission in obj.WorldInfo.Game.MissionTracker.MissionList:
+            for objective in mission.Objectives:
+                progress_message = str(objective.ProgressMessage)
+                if ":" in progress_message and progress_message.split(":")[0] in args.MessageString:
+                    return Block
 
-    return
-
-got_certificate = [False,0]
-@hook("WillowGame.WillowPlayerController:ServerCertificateClosed", Type.PRE)
-def ServerCertificateClosed(obj:UObject, _args:WrappedStruct, _ret:Any, _func:BoundFunction) -> Any:
-    global got_certificate
-    if oidBetterLoot.value:
-        got_certificate = [True, obj.myHUD.ColiseumOverlayMovie.CachedMaxRound]
-
-
-@hook("WillowGame.WillowHUD:OpenHUDMovie", Type.POST)
-def hud_opened(obj:UObject, _args:WrappedStruct, _ret:Any, _func:BoundFunction) -> Any:
-    global got_certificate
-    load_package("dlc3_uberboss_Dynamic")
-    drop_amount = 1 if got_certificate[1] == 5 else 3
-    for i in range(drop_amount):
-        spawn_loot()
-    got_certificate = [False,0]
-    hud_opened.disable()
-
-
-def rotate_yaw(vec, yaw_deg):
-    rad = math.radians(yaw_deg)
-    x = vec.X
-    y = vec.Y
-    z = vec.Z
-    return make_struct(
-        "Vector",
-        X=x * math.cos(rad) - y * math.sin(rad),
-        Y=x * math.sin(rad) + y * math.cos(rad),
-        Z=z
-    )
-
-
-ItemScatterOffset = make_struct("Vector", X=40, Y=0, Z=0)
-loot_loc = make_struct("Vector", X=7676,Y=-4901,Z=-81)
-def spawn_loot():
-    ItemPools = []
-    behavior = find_object("SeqAct_ApplyBehavior","dlc3_uberboss_Dynamic.TheWorld:PersistentLevel.Main_Sequence.SeqAct_ApplyBehavior_5").Behaviors[0]
-    ItemPoolList = behavior.ItemPoolList
-    for PoolIndex, pool in enumerate(ItemPoolList):
-        PoolChance = random.random()
-        EvaluatedPoolProbability = find_class('AttributeInitializationDefinition').ClassDefaultObject.EvaluateInitializationData(ItemPoolList[PoolIndex].PoolProbability, get_pc().Pawn)
-        if((EvaluatedPoolProbability > 0) and PoolChance <= EvaluatedPoolProbability):
-            ItemPools.append(ItemPoolList[PoolIndex].ItemPool)
-        
-
-    for Pool in ItemPools:
-        _, SpawnedInventory = find_class('ItemPool').ClassDefaultObject.SpawnBalancedInventoryFromPool(Pool, get_pc().Pawn.GetExpLevel(), int(get_pc().Pawn.GetExpLevel() * 2.5), get_pc().Pawn, [])                  
-        for Inv in SpawnedInventory:
-            yaw_deg = (random.randint(0, 32767) * 2)
-
-            DropOffset = rotate_yaw(ItemScatterOffset, yaw_deg)
-
-            drop_position = make_struct(
-                "Vector",
-                X=loot_loc.X + DropOffset.X,
-                Y=loot_loc.Y + DropOffset.Y,
-                Z=loot_loc.Z + DropOffset.Z,
-            )
-
-            Inv.GetPickup(True, True)
-            Inv.DropFrom(drop_position, IGNORE_STRUCT, Pool.bDisablePhysicsDrop)
-
-
-
-@hook("WillowGame.Behavior_PlayCharacterSound:ApplyBehaviorToContext", Type.PRE)
-def Behavior_PlayCharacterSound(obj:UObject, _args:WrappedStruct, _ret:Any, _func:BoundFunction) -> Any:
-    if oidMuteMoxxi.value and obj.DialogType and "dlc2_gd_announcer" in str(obj.DialogType):
+    
+    if not oidShops.value and args.MessageString == 'Shops have new inventory!':
         return Block
 
-
-def option_change(option, new_value):
-    if new_value:
-        match option.identifier:
-            case "XP Gain":
-                load_package("dlc2_gd_skills_BigTop")
-                xp_skill = find_object("SkillDefinition","dlc2_gd_skills_BigTop.Rule_Colleseum.GameRule_M_EnemyModifiers")
-                if len(xp_skill.SkillEffectDefinitions) >= 7:
-                    xp_skill.SkillEffectDefinitions.pop(6)
-                    keep_alive(xp_skill)
-
+    #print(f"{args.MsgType} >>>> {args.MessageString} >>>> {args.InMessageClass}")
     return
 
 
-def crowd_setting(option, new_value):
-    load_package("dlc2_ambient_audio")
-    load_package("dlc2_Crowd")
-    Willow_DLC2_CrowdLoopCue = find_object("SoundCue","dlc2_ambient_audio.Willow_DLC2_CrowdLoopCue")
-    DLC2_BD_Crowd_LIVE_CheerHigh_MEDCue = find_object("SoundCue", "dlc2_Crowd.DLC2_BD_Crowd_LIVE_CheerHigh_MEDCue")
-    DLC2_BD_Crowd_LIVE_CheerHighCue = find_object("SoundCue", "dlc2_Crowd.DLC2_BD_Crowd_LIVE_CheerHighCue")
-    DLC2_BD_Crowd_Live_CheerLowCue = find_object("SoundCue", "dlc2_Crowd.DLC2_BD_Crowd_Live_CheerLowCue")
-    DLC2_BD_Crowd_LIVE_CheerHigh_SHRTCue = find_object("SoundCue", "dlc2_Crowd.DLC2_BD_Crowd_LIVE_CheerHigh_SHRTCue")
+@hook("WillowGame.WillowHUDGFxMovie:AddCriticalText", Type.PRE)
+def AddCriticalText(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> Any:
+    if args.Duration > oidMaxDuration.value:
+        with prevent_hooking_direct_calls():
+            args.Duration = oidMaxDuration.value
+            func(args)
+            return Block
 
-    sound_cues = [
-        Willow_DLC2_CrowdLoopCue,
-        DLC2_BD_Crowd_LIVE_CheerHigh_MEDCue,
-        DLC2_BD_Crowd_LIVE_CheerHighCue,
-        DLC2_BD_Crowd_Live_CheerLowCue,
-        DLC2_BD_Crowd_LIVE_CheerHigh_SHRTCue,
-    ]
 
-    for cue in sound_cues:
-        cue.VolumeMultiplier = -1 if new_value else 0.5
-        keep_alive(cue)
+@keybind("Clear Center Messages")
+def clear_messages() -> None:
+    if not get_pc() or not get_pc().myHUD or not get_pc().myHUD.GetHUDMovie():
+        return
+    
+    message_array = get_pc().myHUD.GetHUDMovie().CriticalTextMessages[0].MessageArray
+    for message in message_array:
+        message.DestroyTime = 0
     return
 
 
-oidResetCooldowns = BoolOption(
-    "Reset Action Skill",
-    False,
-    "On",
-    "Off",
-    description="Refills your action skill when waves finish.",
-)
-
-oidXPGain = BoolOption(
-    "XP Gain",
-    False,
-    "On",
-    "Off",
-    description="Enables XP Gain. Requires restart to disable.",
-    on_change=option_change
-)
-
-oidBetterLoot = BoolOption(
-    "Better Loot",
-    False,
-    "On",
-    "Off",
-    description="Adds good loot to the Underdome lobby by the stage after you finish a full set.",
-    on_change=option_change
-)
-
-oidMuteMoxxi = BoolOption(
-    "Mute Moxxi",
-    False,
-    "On",
-    "Off",
-    description="Turns off all Moxxi dialog.",
-)
-
-oidMuteAmbientCrowd = BoolOption(
-    "Mute Ambient Crowd",
-    False,
-    "On",
-    "Off",
-    description="Mutes the constant screaming crowd sounds, not the callouts that react to playing.",
-    on_change=crowd_setting
-)
-
-oidRules = NestedOption("Change Rules", rules.all_rules)
-
-build_mod(options=[oidRules,oidResetCooldowns,oidXPGain,oidBetterLoot,oidMuteMoxxi,oidMuteAmbientCrowd])
-hud_opened.disable()
+build_mod(options=[oidMaxDuration,
+                   oidMoney,
+                   oidAmmo,
+                   oidWeapons,
+                   oidGear,
+                   oidNewMissions,
+                   oidMissionUpdates,
+                   oidMissionDrops,
+                   oidChallenges,
+                   oidLevelUp,
+                   oidWeaponProf,
+                   oidSkillPoints,
+                   oidShops,
+                   oidOutposts,])
