@@ -113,7 +113,20 @@ oidEridianSlowdown = BoolOption(
     on_change=slowdown_toggle
 )
 
-
+#def add_berserk_boost(option, new_value):
+#    #berserk_boost = find_object("SkillDefinition","gd_Skills_Brick.Action.A_Berserk_BerserkBoost")
+#    #berserk_boost.SkillEffectDefinitions[0].ModifierType = 1
+#    #berserk_boost.SkillEffectDefinitions[0].BaseModifierValue.BaseValueConstant = -12000 if new_value else -40
+#    berserk_boost = find_object("AttributeInitializationDefinition","gd_Skills2_Brick.MiscData.Berserk_init_HealthRegen")
+#    berserk_boost.ValueFormula.Multiplier.BaseValueScaleConstant = 1.5 if new_value else 0.03
+#
+#oidBetterBerserk = BoolOption(
+#    "Better Initial Berserk Health",
+#    False,
+#    "On",
+#    "Off",
+#    description="With this on, starting Berserk will add much more HP."
+#)
 
 @hook("WillowGame.WillowWeapon:AttachMuzzleFlash", Type.PRE)
 def AttachMuzzleFlash(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):

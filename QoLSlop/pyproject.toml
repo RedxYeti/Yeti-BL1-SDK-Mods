@@ -1,11 +1,11 @@
 [project]
-name = "YetisQoLPatch"
+name = "QoLSlop"
 version = "1.0.0"
 authors = [{ name = "Yeti" }]
 description = "Adds a range of QoL features, all with options."
 
 [tool.sdkmod]
-name = "Yeti's QoL Patch"
+name = "QoL Slop"
 mod_type = "Standard" 
 supported_games = "BL1"
 coop_support = "HostOnly"
