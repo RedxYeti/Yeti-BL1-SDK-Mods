@@ -146,8 +146,8 @@ MuzzleFlashScaler = SliderOption(
 
 def set_ffyl(option, new_value):
     injured_def = find_object("InjuredDefinition","gd_PlayerShared.injured.PlayerInjuredDefinition")
+    keep_alive(injured_def)
     if new_value:
-        injured_def.InjuredAttributeModifiers = []
         injured_def.MultiPlayerTargetedBehaviors[0].OverlayParameters.DestPostProcessOverlay.Scene_Highlights.X = 0
         injured_def.MultiPlayerTargetedBehaviors[0].OverlayParameters.DestPostProcessOverlay.Scene_Highlights.Y = 0
         injured_def.MultiPlayerTargetedBehaviors[0].OverlayParameters.DestPostProcessOverlay.Scene_Highlights.Z = 0
@@ -389,6 +389,18 @@ oidNoWastedArtifacts = BoolOption(
     "On",
     "Off",
     description="Disables Artifacts for classes not in the game from spawning.\n Requires game restart if turning off, teammate joining, or changing character classes."
+)
+
+@hook("WillowGame.WillowGlobals:IsCodeUnlocked", Type.PRE)
+def IsCodeUnlocked(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+    return Block, oidPreOrder.value
+
+oidPreOrder = BoolOption(
+    "Pre Order Unlocks",
+    False,
+    "On",
+    "Off",
+    description="New Characters will start with the Mercenary Pack Pre Order Bonus."
 )
 
 mod = build_mod()
