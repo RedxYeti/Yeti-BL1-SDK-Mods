@@ -411,12 +411,17 @@ def QOLSlop_MapChange(obj:UObject, args:WrappedStruct, ret:Any, func:BoundFuncti
         in_mission = find_object("MissionDefinition", 'dlc3_SideMissions.SideMissions.M_dlc3_GetLoot03')
         for mission in pc.MissionPlaythroughData[PlayThroughNumber].MissionList:
             if mission.MissionDef == in_mission and mission.Status == 4:
-                door = find_object("Object", "dlc3_lancedepot_Dynamic.TheWorld:PersistentLevel.Main_Sequence.GrabLootMissions.SeqAct_Interp_6")
                 death = find_object("Object", "dlc3_lancedepot_p.TheWorld:PersistentLevel.Main_Sequence.SeqEvent_Death_0")
+                door = find_object("Object", "dlc3_lancedepot_Dynamic.TheWorld:PersistentLevel.Main_Sequence.GrabLootMissions.SeqAct_Interp_6")
+                door2 = find_object("Object", "dlc3_lancedepot_Dynamic.TheWorld:PersistentLevel.Main_Sequence.GrabLootMissions.SeqAct_Interp_8")
                 link = make_struct("SeqOpOutputInputLink",
                                     LinkedOp=door,
                                     InputLinkIdx=0)
+                link2 = make_struct("SeqOpOutputInputLink",
+                                    LinkedOp=door2,
+                                    InputLinkIdx=0)
                 death.OutputLinks[0].Links.append(link)
+                death.OutputLinks[0].Links.append(link2)
         return
     
     if oidTboneDoors.value and args.NextMapName == "dlc3_HUB_p":
