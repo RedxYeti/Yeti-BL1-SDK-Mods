@@ -129,7 +129,7 @@ oidEridianSlowdown = BoolOption(
 #)
 
 @hook("WillowGame.WillowWeapon:AttachMuzzleFlash", Type.PRE)
-def AttachMuzzleFlash(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_AttachMuzzleFlash(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     if MuzzleFlashScaler.value < 100:
         obj.FirstPersonMuzzleFlash.SetScale(MuzzleFlashScaler.value/100)
     return
@@ -220,7 +220,7 @@ oidMoreNadeMods = BoolOption(
 
 
 @hook("WillowGame.WillowPawn:TakeFallingDamage", Type.PRE)
-def TakeFallingDamage(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_TakeFallingDamage(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     if oidFallDamage.value:
         return Block
     
@@ -270,7 +270,7 @@ oidSpeedSkills = BoolOption(
 
 
 @hook("WillowGame.WillowInteractiveObject:UsedBy", Type.POST)
-def TurretUsedBy(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_TurretUsedBy(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     if not oidAxtonTurret.value:
         return
     if args.User and args.User.Controller.ScorpioSpawnedActor:
@@ -290,7 +290,7 @@ def TurretUsedBy(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunctio
 
 
 @hook("WillowGame.WillowPawn:PlayLanded", Type.POST)
-def TurretLanded(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_TurretLanded(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     if not oidAxtonTurret.value or obj.MatineeGroupName == "landed_turret":
         return
     if obj.ObjectArchetype and obj.ObjectArchetype._path_name() == "gd_AutomatedTurret.PawnArchetype.Pawn_AutomatedTurret_Scorpio":
@@ -313,7 +313,7 @@ def TurretLanded(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunctio
 
 
 @hook("WillowGame.WillowPlayerController:DisableSkillInputForSkillNumber", Type.PRE)
-def TurretDisableSkillInput(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_TurretDisableSkillInput(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     if not oidAxtonTurret.value:
         return
     if obj.PlayerClass.CharacterName != 0:
@@ -324,7 +324,7 @@ def TurretDisableSkillInput(obj: UObject, args: WrappedStruct, ret: Any, func: B
 
 
 @hook("WillowGame.WillowPawn:Died", Type.PRE)
-def TurretKilledEnemy(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_TurretKilledEnemy(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     if not oidAxtonTurret.value:
         return
     if not args.Killer or not hasattr(args.Killer, "MyWillowPawn"):
@@ -359,7 +359,7 @@ def clean_inv_bals(class_name):
 
 
 @hook("WillowGame.WillowGameInfo:PreCommitMapChange", Type.POST)
-def coms_map_change(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> None:
+def QOLSlop_coms_map_change(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction) -> None:
 
     map_name = args.NextMapName
     if map_name in ["Loader", "FakeEntry"]:
@@ -392,7 +392,7 @@ oidNoWastedArtifacts = BoolOption(
 )
 
 @hook("WillowGame.WillowGlobals:IsCodeUnlocked", Type.PRE)
-def IsCodeUnlocked(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
+def QOLSlop_IsCodeUnlocked(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
     return Block, oidPreOrder.value
 
 oidPreOrder = BoolOption(
@@ -402,5 +402,50 @@ oidPreOrder = BoolOption(
     "Off",
     description="New Characters will start with the Mercenary Pack Pre Order Bonus."
 )
+
+@hook("WillowGame.WillowGameInfo:PreCommitMapChange", Type.POST)
+def QOLSlop_MapChange(obj:UObject, args:WrappedStruct, ret:Any, func:BoundFunction) -> Any:
+    if oidArmoryDoor.value and args.NextMapName == "dlc3_lancedepot_p":
+        pc = get_pc()
+        PlayThroughNumber = pc.GetCurrentPlaythrough()
+        in_mission = find_object("MissionDefinition", 'dlc3_SideMissions.SideMissions.M_dlc3_GetLoot03')
+        for mission in pc.MissionPlaythroughData[PlayThroughNumber].MissionList:
+            if mission.MissionDef == in_mission and mission.Status == 4:
+                door = find_object("Object", "dlc3_lancedepot_Dynamic.TheWorld:PersistentLevel.Main_Sequence.GrabLootMissions.SeqAct_Interp_6")
+                death = find_object("Object", "dlc3_lancedepot_p.TheWorld:PersistentLevel.Main_Sequence.SeqEvent_Death_0")
+                link = make_struct("SeqOpOutputInputLink",
+                                    LinkedOp=door,
+                                    InputLinkIdx=0)
+                death.OutputLinks[0].Links.append(link)
+        return
+    
+    if oidTboneDoors.value and args.NextMapName == "dlc3_HUB_p":
+        closed_doors = [
+        find_object('WillowInteractiveObject','dlc3_HUB_p.TheWorld:PersistentLevel.WillowInteractiveObject_17'),
+        find_object('WillowInteractiveObject','dlc3_HUB_p.TheWorld:PersistentLevel.WillowInteractiveObject_82'),
+        find_object('WillowInteractiveObject','dlc3_HUB_p.TheWorld:PersistentLevel.WillowInteractiveObject_42'),
+        ]
+        load_package("dlc3_doors_usable")
+        Door_StartOpen = find_object("InteractiveObjectDefinition","dlc3_doors_usable.Door_StartOpen")
+        for door in closed_doors:
+            door.InteractiveObjectDefinition = Door_StartOpen
+
+oidArmoryDoor = BoolOption(
+    "Open Armory Door",
+    False,
+    "On",
+    "Off",
+    description="With this on, the main armory door (behind where Knoxx spawns) will open after killing Knoxx after completing 'It's like Christmas!'."
+)
+
+oidTboneDoors = BoolOption(
+    "Open T-Bone Doors",
+    False,
+    "On",
+    "Off",
+    description="With this on, the doors in T-Bone Junction will be open by default."
+)
+
+
 
 mod = build_mod()
