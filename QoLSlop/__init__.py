@@ -218,6 +218,26 @@ oidMoreNadeMods = BoolOption(
 )
 
 
+def quiet_transfusion(option, new_value):
+    transfusion_sound_effect = find_object("SoundCue","Wep_Elemental_Effects.Weapon_Tech.Transfusion_Receive_healthCue")
+    keep_alive(transfusion_sound_effect)
+    if new_value:
+        transfusion_sound_effect.VolumeMultiplier = 0.2
+    else:
+        transfusion_sound_effect.VolumeMultiplier = 0.4
+
+
+
+oidQuietTransfusion = BoolOption(
+    "Quiet Transfusion",
+    False,
+    "On",
+    "Off",
+    description="Lowers the volume of health gain sound effect from transfusion grenades.",
+    on_change=quiet_transfusion
+)
+
+
 
 @hook("WillowGame.WillowPawn:TakeFallingDamage", Type.PRE)
 def QOLSlop_TakeFallingDamage(obj: UObject, args: WrappedStruct, ret: Any, func: BoundFunction):
