@@ -6,9 +6,6 @@ description = "Adds dedicated loot sources to enemies across the game. Coop supp
 
 [tool.sdkmod]
 name = "Dedicated Drops"
-mod_type = "Standard"
-supported_games = ["BL1"]
-coop_support = "RequiresAllPlayers"
-download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/tree/main/DedicatedDropsSDK"
-license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
+download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/DedicatedDropsSDK/DedicatedDropsSDK.zip"
+
 
