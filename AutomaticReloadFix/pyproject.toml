@@ -9,5 +9,5 @@ name = "Automatic Reload Fix"
 supported_games = ["BL1","TPS","AODK","BL2"]
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
 coop_support = "ClientSide"
-download = ""
+download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/AutomaticReloadFix/AutomaticReloadFix.sdkmod"
 version = "1.1"
