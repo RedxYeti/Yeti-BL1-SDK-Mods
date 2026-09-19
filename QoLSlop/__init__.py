@@ -1,7 +1,7 @@
 from unrealsdk import find_all, load_package,make_struct,find_object,find_class
 from unrealsdk.hooks import Type, Block
 from unrealsdk.unreal import UObject, WrappedStruct, BoundFunction,WeakPointer
-from mods_base import hook, get_pc, SliderOption, build_mod,BoolOption,ObjectFlags,command
+from mods_base import hook, get_pc, SliderOption, build_mod,BoolOption,ObjectFlags
 from typing import Any
 
 def keep_alive(in_object:UObject):
@@ -67,35 +67,6 @@ oidKnoxxItems = BoolOption(
     "Off",
     description="Adds Knoxx class mods to everything.",
     on_change=knoxx_enabled,
-)
-
-block_xp_gain = False
-def block_xp_gain_toggled(option, new_value):
-    global block_xp_gain
-    block_xp_gain = new_value
-    value = 0 if new_value else 1
-    get_pc().ConsoleCommand(f"set ExperienceResourcePool ExpAllPointsScale {value}")
-
-@command("togglexp")
-def toggle_xp(args):
-    global block_xp_gain
-    block_xp_gain = not block_xp_gain
-    oidBlockXPGain.value = block_xp_gain
-    value = 0 if block_xp_gain else 1
-    message = "Off" if block_xp_gain else "On"
-    get_pc().ConsoleCommand(f"set ExperienceResourcePool ExpAllPointsScale {value}")
-    print(f"[Yeti's QoL Patch] XP Gain: {message}")
-    mod.save_settings()
-
-
-
-oidBlockXPGain = BoolOption(
-    "Block XP Gain",
-    False,
-    "On",
-    "Off",
-    description=f"Stops XP Gain.",
-    on_change=block_xp_gain_toggled
 )
 
 def slowdown_toggle(option, new_value):

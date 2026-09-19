@@ -1,13 +1,13 @@
 [project]
 name = "QoLSlop"
-version = "1.0.0"
+version = "1.1.0"
 authors = [{ name = "Yeti" }]
 description = "Adds a range of QoL features, all with options."
 
 [tool.sdkmod]
 name = "QoL Slop"
 mod_type = "Standard" 
-supported_games = ["BL1"]
+supported_games = ["BL1", "BL1E"]
 coop_support = "HostOnly"
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/QoLSlop/QoLSlop.sdkmod"
 license = {name = "GPL3", url = "https://choosealicense.com/licenses/gpl-3.0/" }
