@@ -6,4 +6,5 @@ description = "Adds fast travels to all of the story DLCs. Works coop!"
 
 [tool.sdkmod]
 name = "DLC Fast Travel"
+supported_games = ["BL1"]
 download = "https://github.com/RedxYeti/Yeti-BL1-SDK-Mods/raw/refs/heads/main/DLCFastTravelSDK/DLCFastTravelSDK.zip"
