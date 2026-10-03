@@ -1,10 +1,10 @@
-from typing import Any #type:ignore
+from typing import Any 
 import os
 
-from mods_base import hook, build_mod, keybind, get_pc,BoolOption, ButtonOption,MODS_DIR #type:ignore
+from mods_base import hook, build_mod, keybind, get_pc,BoolOption, ButtonOption,MODS_DIR
 from unrealsdk import find_object
-from unrealsdk.hooks import Type, Block #type:ignore
-from unrealsdk.unreal import BoundFunction, UObject, WrappedStruct #type:ignore
+from unrealsdk.hooks import Type, Block, add_hook
+from unrealsdk.unreal import BoundFunction, UObject, WrappedStruct
 
 from .maps import Map
 from .enemies import Enemy, oidALSlider
@@ -166,3 +166,10 @@ oidOasis = BoolOption(
 
 
 build_mod(options=[oidDropChances, oidALSlider, oidBlockXPGain, oidOasis])
+
+
+def ValidateDefinition(*_):
+    #forced sanity saver for people who disable the mod
+    return Block, True
+add_hook("WillowGame.WillowPlayerController:ValidateItemDefinition", Type.PRE, "ValidateItemDefinition", ValidateDefinition)
+add_hook("WillowGame.WillowPlayerController:ValidateWeaponDefinition", Type.PRE, "ValidateWeaponDefinition", ValidateDefinition)
